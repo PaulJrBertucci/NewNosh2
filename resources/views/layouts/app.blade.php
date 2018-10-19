@@ -81,7 +81,7 @@
                             <li><a href="{{ route('schedule') }}">{{ trans('nosh.schedule') }}</a></li>
                         @endif
                         @if (Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4')
-                            <li><a href="{{ route('financial', ['queue']) }}">{{ trans('nosh.financial') }}</a></li>
+/*                            <li><a href="{{ route('financial', ['queue']) }}">{{ trans('nosh.financial') }}</a></li> */
                             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ trans('nosh.office') }} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" style="width:250px;">
                                     <li><a href="{{ route('vaccines', ['inventory']) }}">{{ trans('nosh.vaccines') }}</a></li>
@@ -342,18 +342,18 @@
                                 <span class="sidebar-item">{{ trans('nosh.records_list') }}</span>
                             </a>
                         </li>
-                        <li @if(isset($billing_active)) class="active" @endif>
+/*                        <li @if(isset($billing_active)) class="active" @endif>
                             <a href="{{ route('billing_list', ['type' => 'encounters', 'pid' => Session::get('pid')]) }}">
                                 <i class="fa fa-bank fa-fw fa-lg"></i>
                                 <span class="sidebar-item">{{ trans('nosh.billing_list') }}</span>
                             </a>
                         </li>
-                        <li @if(isset($payors_active)) class="active" @endif>
+                       <li @if(isset($payors_active)) class="active" @endif>
                             <a href="{{ route('payors_list', ['type' => 'active']) }}">
                                 <i class="fa fa-money fa-fw fa-lg"></i>
                                 <span class="sidebar-item">{{ trans('nosh.payors_list') }}</span>
                             </a>
-                        </li>
+                        </li> */
                     @endif
                 </ul>
             </div>

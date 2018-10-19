@@ -19,4 +19,4 @@
 {!! $plan !!}
 <br />
 <hr />
-{!! $billing !!}
+/* {!! $billing !!} */
