@@ -53,7 +53,6 @@ Route::any('uma_patient_centric_designate', ['as' => 'uma_patient_centric_design
 Route::get('update', ['as' => 'update_install', 'uses' => 'InstallController@update']);
 Route::get('update_env', ['as' => 'update_env', 'uses' => 'InstallController@update_env']);
 Route::get('update_system/{type?}', ['as' => 'update_system', 'uses' => 'InstallController@update_system']);
-Route::post('get_state_data', ['as' => 'get_state_data', 'uses' => 'AjaxInstallController@get_state_data']);
 
 // Core routes
 Route::get('/', ['as' => 'dashboard', 'uses' => 'CoreController@dashboard']);
@@ -170,7 +169,7 @@ Route::any('billing_notes', ['as' => 'billing_notes', 'uses' => 'ChartController
 Route::get('billing_payment_delete/{id}/{index}/{billing_id}', ['as' => 'billing_payment_delete', 'uses' => 'ChartController@billing_payment_delete']);
 Route::get('billing_payment_history/{id}/{index}', ['as' => 'billing_payment_history', 'uses' => 'ChartController@billing_payment_history']);
 Route::get('care_opportunities/{type}', ['as' => 'care_opportunities', 'uses' => 'ChartController@care_opportunities']);
-Route::any('cms_bluebutton/{as?}', ['as' => 'cms_bluebutton', 'uses' => 'ChartController@cms_bluebutton']);
+Route::any('cms_bluebutton', ['as' => 'cms_bluebutton', 'uses' => 'ChartController@cms_bluebutton']);
 Route::get('cms_bluebutton_display/{type?}', ['as' => 'cms_bluebutton_display', 'uses' => 'ChartController@cms_bluebutton_display']);
 Route::get('cms_bluebutton_eob/{sequence}', ['as' => 'cms_bluebutton_eob', 'uses' => 'ChartController@cms_bluebutton_eob']);
 Route::any('chart_action/{table}/{action}/{id}/{index}', ['as' => 'chart_action', 'uses' => 'ChartController@chart_action']);
@@ -196,8 +195,6 @@ Route::get('encounter_assessment_add/{type}/{id}', ['as' => 'encounter_assessmen
 Route::get('encounter_assessment_delete/{id}', ['as' => 'encounter_assessment_delete', 'uses' => 'ChartController@encounter_assessment_delete']);
 Route::any('encounter_assessment_edit/{id}', ['as' => 'encounter_assessment_edit', 'uses' => 'ChartController@encounter_assessment_edit']);
 Route::get('encounter_assessment_move/{id}/{direction}', ['as' => 'encounter_assessment_move', 'uses' => 'ChartController@encounter_assessment_move']);
-// GYN 20181007: Add Copy to Problem List
-Route::get('encounter_assessment_copy/{id}', ['as' => 'encounter_assessment_copy', 'uses' => 'ChartController@encounter_assessment_copy']);
 Route::any('encounter_billing/{eid}/{section?}', ['as' => 'encounter_billing', 'uses' => 'ChartController@encounter_billing']);
 Route::get('encounter_close', ['as' => 'encounter_close', 'uses' => 'ChartController@encounter_close']);
 Route::get('encounter_delete_photo/{id}', ['as' => 'encounter_delete_photo', 'uses' => 'ChartController@encounter_delete_photo']);
@@ -213,9 +210,8 @@ Route::get('encounter_vitals_view/{eid?}', ['as' => 'encounter_vitals_view', 'us
 Route::get('encounter_vitals_chart/{type}', ['as' => 'encounter_vitals_chart', 'uses' => 'ChartController@encounter_vitals_chart']);
 Route::get('encounters_list', ['as' => 'encounters_list', 'uses' => 'ChartController@encounters_list']);
 Route::get('family_history', ['as' => 'family_history', 'uses' => 'ChartController@family_history']);
-Route::any('family_history_sensitive/{id}', ['as' => 'family_history_sensitive', 'uses' => 'ChartController@family_history_sensitive']);
 Route::any('family_history_update/{id}', ['as' => 'family_history_update', 'uses' => 'ChartController@family_history_update']);
-Route::any('fhir_connect/{id?}/{as?}', ['as' => 'fhir_connect', 'uses' => 'ChartController@fhir_connect']);
+Route::any('fhir_connect/{id?}', ['as' => 'fhir_connect', 'uses' => 'ChartController@fhir_connect']);
 Route::any('fhir_connect_display/{type?}', ['as' => 'fhir_connect_display', 'uses' => 'ChartController@fhir_connect_display']);
 Route::any('fhir_connect_response', ['as' => 'fhir_connect_response', 'uses' => 'ChartController@fhir_connect_response']);
 Route::get('form_list/{type}', ['as' => 'form_list', 'uses' => 'ChartController@form_list']);
@@ -322,7 +318,6 @@ Route::group(['prefix' => 'fhir', 'middleware' => 'fhir'], function () {
     Route::resource('Appointment', 'AppointmentController'); //in use - appointments
     Route::resource('Binary', 'BinaryController'); //in use - documents
     Route::resource('CarePlan', 'CarePlanController');
-    Route::resource('CareTeam', 'CareTeamController');
     Route::resource('Composition', 'CompositionController');
     Route::resource('ConceptMap', 'ConceptMapController');
     Route::resource('Condition', 'ConditionController'); //in use - issues, assessments

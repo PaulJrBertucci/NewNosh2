@@ -866,15 +866,15 @@ class ChartController extends Controller {
         return view('chart', $data);
     }
 
-    public function cms_bluebutton(Request $request, $as='')
+    public function cms_bluebutton(Request $request)
     {
         $data['panel_header'] = 'Connect to CMS Bluebutton';
         $data['message_action'] = Session::get('message_action');
         Session::forget('message_action');
         if (! Session::has('oidc_relay')) {
             $param = [
-                'origin_uri' => route('cms_bluebutton', [$as]),
-                'response_uri' => route('cms_bluebutton', [$as]),
+                'origin_uri' => route('cms_bluebutton'),
+                'response_uri' => route('cms_bluebutton'),
                 'fhir_url' => '',
                 'fhir_auth_url' => '',
                 'fhir_token_url' => '',
@@ -897,12 +897,6 @@ class ChartController extends Controller {
                 Session::put('oidc_relay', $oidc_response['state']);
                 return redirect($oidc_response['url']);
             } else {
-                if ($as !== '') {
-                    $practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-                    if (!empty($practice->uma_uri)) {
-                        return redirect($practice->uma_uri);
-                    }
-                }
                 Session::put('message_action', $oidc_response['message']);
                 return redirect(Session::get('last_page'));
             }
@@ -940,12 +934,6 @@ class ChartController extends Controller {
                 Session::put('cms_pid', $cms_pid);
                 return redirect()->route('cms_bluebutton_display');
             } else {
-                if ($as !== '') {
-                    $practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-                    if (!empty($practice->uma_uri)) {
-                        return redirect($practice->uma_uri);
-                    }
-                }
                 Session::put('message_action', $oidc_response1['message']);
                 return redirect(Session::get('last_page'));
             }
@@ -1222,9 +1210,6 @@ class ChartController extends Controller {
             'orders_cp_icd',
             'orders_referrals_icd'
         ];
-        $multiple_select_arr2 = [
-            'label'
-        ];
         $nosh_action_tables = [
             'rx_list',
             'orders',
@@ -1301,11 +1286,6 @@ class ChartController extends Controller {
         foreach ($multiple_select_arr1 as $key3) {
             if (array_key_exists($key3, $data)) {
                 $data[$key3] = implode("\n", $data[$key3]);
-            }
-        }
-        foreach ($multiple_select_arr2 as $key4) {
-            if (array_key_exists($key4, $data)) {
-                $data[$key4] = implode(";", $data[$key4]);
             }
         }
         // Handle rCopia calls after action
@@ -1545,19 +1525,19 @@ class ChartController extends Controller {
                         if ($gender == 'male') {
                             $sex = 'm';
                         }
-                        if (!empty($data['weight'])) {
+                        if ($data['weight'] !== '') {
                             $wt_data = $this->gc_weight_age($sex, $pid);
                             $data['wt_percentile'] = $wt_data['percentile'];
                         }
-                        if (!empty($data['height'])) {
+                        if ($data['height'] !== '') {
                             $ht_data = $this->gc_height_age($sex, $pid);
                             $data['ht_percentile'] = $ht_data['percentile'];
                         }
-                        if (!empty($data['weight']) && !empty($data['height'])) {
+                        if ($data['weight'] !== '' && $data['height'] !== '') {
                             $wt_ht_data = $this->gc_weight_height($sex, $pid);
                             $data['wt_ht_percentile'] = $wt_ht_data['percentile'];
                         }
-                        if (!empty($data['headcircumference'])) {
+                        if ($data['headcircumference'] !== '') {
                             $hc_data = $this->gc_hc_age($sex, $pid);
                             $data['hc_percentile'] = $hc_data['percentile'];
                         }
@@ -1675,12 +1655,6 @@ class ChartController extends Controller {
                     }
                 }
             }
-            // FHIR resource post-save handling
-            if (isset($data['label'])) {
-                if ($data['label'] !== '') {
-                    $this->uma_resource_process($data['label'], $row_id1, $table);
-                }
-            }
         }
         if ($action == 'inactivate') {
             if ($table == 'issues') {
@@ -1720,11 +1694,6 @@ class ChartController extends Controller {
             //         $this->api_data('update', $table, $index, $id);
             //     }
             // }
-            // FHIR resource post-save handling
-            $update_query1 = DB::table($table)->where($index, '=', $id)->first();
-            if ($update_query1->label !== '') {
-                $this->uma_resource_process($update_query1->label, $id, $table, true);
-            }
             $arr['message'] = $message . 'inactivated!';
         }
         if ($action == 'reactivate') {
@@ -1768,11 +1737,6 @@ class ChartController extends Controller {
             //         $this->api_data('update', $table, $index, $id);
             //     }
             // }
-            // FHIR resource post-save handling
-            $update_query2 = DB::table($table)->where($index, '=', $id)->first();
-            if ($update_query2->label !== '') {
-                $this->uma_resource_process($update_query2->label, $id, $table);
-            }
             $arr['message'] = $message . 'reactivated!';
         }
         if ($action == 'move_mh') {
@@ -1836,11 +1800,6 @@ class ChartController extends Controller {
                     }
                 }
             }
-            // FHIR resource post-save handling
-            $delete_query = DB::table($table)->where($index, '=', $id)->first();
-            if ($delete_query->label !== '') {
-                $this->uma_resource_process($delete_query->label, $id, $table);
-            }
             DB::table($table)->where($index, '=', $id)->delete();
             $this->audit('Delete');
             // foreach ($api_tables as $api_table) {
@@ -1902,22 +1861,11 @@ class ChartController extends Controller {
                         }
                     }
                 }
-                // FHIR resource post-save handling
-                if (isset($data['label'])) {
-                    if ($data['label'] !== '') {
-                        $this->uma_resource_process($data['label'], $row_id1, $table);
-                    }
-                }
                 $arr['message'] = $message . 'prescribed!';
             } else {
                 $data5['rxl_date_old'] = date('Y-m-d H:i:s', time());
                 DB::table($table)->where($index, '=', $id)->update($data5);
                 $this->audit('Update');
-                // FHIR resource post-save handling
-                $update_query5 = DB::table($table)->where($index, '=', $id)->first();
-                if ($update_query5->label !== '') {
-                    $this->uma_resource_process($update_query5->label, $id, $table, true);
-                }
                 // $this->api_data('update', 'rx_list', 'rxl_id', $id);
                 $old_rx = DB::table($table)->where($index, '=', $id)->first();
                 $data['rxl_date_active'] = $old_rx->rxl_date_active;
@@ -1925,12 +1873,6 @@ class ChartController extends Controller {
                 $data['pid'] = $pid;
                 $row_id1 = DB::table($table)->insertGetId($data);
                 $this->audit('Add');
-                // FHIR resource post-save handling
-                if (isset($data['label'])) {
-                    if ($data['label'] !== '') {
-                        $this->uma_resource_process($data['label'], $row_id1, $table);
-                    }
-                }
                 // foreach ($good_rx_tables as $good_rx_table) {
                 //     if ($good_rx_table == $table) {
                 //         $this->goodrx_notification($request->input('rxl_medication'), $request->input('rxl_dosage') . $request->input('rxl_dosage_unit'));
@@ -2027,10 +1969,6 @@ class ChartController extends Controller {
                 ];
                 DB::table('rx_list')->where('rxl_id', '=', $row1->rxl_id)->update($eie_data);
                 $this->audit('Update');
-                $update_query6 = DB::table('rx_list')->where('rxl_id', '=', $row1->rxl_id)->first();
-                if ($update_query6->label !== '') {
-                    $this->uma_resource_process($update_query6->label, $row1->rxl_id, 'rx_list');
-                }
                 // $this->api_data('update', 'rx_list', 'rxl_id', $row1->rxl_id);
             }
             if($practice->rcopia_extension == 'y') {
@@ -2041,13 +1979,8 @@ class ChartController extends Controller {
                     sleep(2);
                 }
             }
-            $delete_query1 = DB::table('rx_list')->where('rxl_id', '=', $id)->first();
-            if ($delete_query1->label !== '') {
-                $this->uma_resource_process($delete_query1->label, $id, 'rx_list', true);
-            }
             DB::table('rx_list')->where('rxl_id', '=', $id)->delete();
             $this->audit('Delete');
-
             // $this->api_data('delete', 'rx_list', 'rxl_id', $old_rxl_id);
             // UMA placeholder
             $arr['message'] = "Entered medication in error process complete!";
@@ -2833,8 +2766,7 @@ class ChartController extends Controller {
         if ($result) {
             $gender = $this->array_gender();
             $marital = $this->array_marital();
-            $state = $this->array_states($result->country);
-            $guardian_state = $this->array_states($result->guardian_country);
+            $state = $this->array_states();
             $header_arr = [
                 'Name and Identity' => route('chart_form', ['demographics', 'pid', Session::get('pid'), 'name']),
                 'Contacts' => route('chart_form', ['demographics', 'pid', Session::get('pid'), 'contacts']),
@@ -2863,7 +2795,6 @@ class ChartController extends Controller {
             ];
             $contact_arr = [
                 'Address' => $result->address,
-                'Country' => $result->country,
                 'City' => $result->city,
                 'State' => $state[$result->state],
                 'Zip' => $result->zip,
@@ -2879,9 +2810,8 @@ class ChartController extends Controller {
                 'First Name' => $result->guardian_firstname,
                 'Relationship' => $result->guardian_relationship,
                 'Address' => $result->guardian_address,
-                'Country' => $result->guardian_country,
                 'City' => $result->guardian_city,
-                'State' => $guardian_state[$result->guardian_state],
+                'State' => $state[$result->guardian_state],
                 'Zip' => $result->guardian_zip,
                 'Email' => $result->guardian_email,
                 'Home Phone' => $result->guardian_phone_home,
@@ -2897,7 +2827,7 @@ class ChartController extends Controller {
             ];
             if ($result->pharmacy_address_id !== '' && $result->pharmacy_address_id !== null) {
                 $pharmacy_query = DB::table('addressbook')->where('address_id', '=', $result->pharmacy_address_id)->first();
-                $other_arr['Preferred Pharmacy'] = (is_object($pharmacy_query) ? $pharmacy_query->displayname : '');
+                $other_arr['Preferred Pharmacy'] = $pharmacy_query->displayname;
             }
             $return = $this->header_build($header_arr, 'Name and Identity');
             foreach ($identity_arr as $key1 => $value1) {
@@ -3129,13 +3059,8 @@ class ChartController extends Controller {
     {
         $data['message_action'] = Session::get('message_action');
         Session::forget('message_action');
-        if ($type == 'All') {
-            $query = DB::table('documents')->where('pid', '=', Session::get('pid'))->orderBy('documents_date', 'desc');
-        } else {
-            $query = DB::table('documents')->where('pid', '=', Session::get('pid'))->where('documents_type', '=', $type)->orderBy('documents_date', 'desc');
-        }
+        $query = DB::table('documents')->where('pid', '=', Session::get('pid'))->where('documents_type', '=', $type)->orderBy('documents_date', 'desc');
         $type_arr = [
-            'All' => ['All', 'fa-files-o'],
             'Laboratory' => ['Laboratory', 'fa-flask'],
             'Imaging' => ['Imaging', 'fa-film'],
             'Cardiopulmonary' => ['Cardiopulmonary', 'fa-heartbeat'],
@@ -3172,25 +3097,16 @@ class ChartController extends Controller {
             $list_array = [];
             foreach ($result as $row) {
                 $arr = [];
-                if (!empty($row->documents_type)) {
-                    $arr['label'] = '<i class="fa ' . $type_arr[$row->documents_type][1] . ' fa-fw" style="margin-right:10px;"></i><b>' . date('Y-m-d', $this->human_to_unix($row->documents_date)) . '</b> - ' . $row->documents_desc . ' from ' . $row->documents_from;
-                    $arr['view'] = route('document_view', [$row->$row_index]);
-                    if ($edit == true) {
-                        $arr['edit'] = route('chart_form', ['documents', $row_index, $row->$row_index]);
-                        $arr['delete'] = route('chart_action', ['table' => 'documents', 'action' => 'delete', 'index' => $row_index, 'id' => $row->$row_index]);
-                    }
-                    if ($row->reconcile !== null && $row->reconcile !== 'y') {
-                        $arr['danger'] = true;
-                    }
-                    $list_array[] = $arr;
-                } else {
-                    // Clean up orphaned entries
-                    if (file_exists($row->documents_url)) {
-                        unlink($row->documents_url);
-                    }
-                    DB::table('documents')->where($row_index, '=', $row->$row_index)->delete();
-                    $this->audit('Delete');
+                $arr['label'] = '<b>' . date('Y-m-d', $this->human_to_unix($row->documents_date)) . '</b> - ' . $row->documents_desc . ' from ' . $row->documents_from;
+                $arr['view'] = route('document_view', [$row->$row_index]);
+                if ($edit == true) {
+                    $arr['edit'] = route('chart_form', ['documents', $row_index, $row->$row_index]);
+                    $arr['delete'] = route('chart_action', ['table' => 'documents', 'action' => 'delete', 'index' => $row_index, 'id' => $row->$row_index]);
                 }
+                if ($row->reconcile !== null && $row->reconcile !== 'y') {
+                    $arr['danger'] = true;
+                }
+                $list_array[] = $arr;
             }
             $return .= $this->result_build($list_array, 'documents_list', false, true);
         } else {
@@ -3474,20 +3390,16 @@ class ChartController extends Controller {
                     $vitals_percent_arr = $this->array_vitals1();
                     $vitals_display_arr = [];
                     foreach ($vitals_include as $vitals_key=>$vitals_value) {
-                        if (!empty($vitals->{$vitals_key})) {
-                            if ($vitals_key !== 'bp_systolic' && $vitals_key !== 'bp_diastolic') {
-                                $vitals_display_arr[] = '<b>' .$vitals_value['name'] . ':</b> ' . $vitals->{$vitals_key} . ' ' . $vitals_value['unit'];
-                            } elseif ($vitals_value['name'] == 'SBP') {
-                                $vitals_display_arr[] = '<b>BP:</b>' . $vitals->bp_systolic . '/' . $vitals->bp_diastolic . ' mmHg';
-                            }
+                        if ($vitals->{$vitals_key} !== '') {
+                            $vitals_display_arr[] = '<b>' .$vitals_value['name'] . ':</b> ' . $vitals->{$vitals_key};
                         }
                     }
                     foreach ($vitals_percent_arr as $vitals_key1=>$vitals_value1) {
-                        if (!empty($vitals->{$vitals_key1})) {
+                        if ($vitals->{$vitals_key1} !== '') {
                             $vitals_display_arr[] = '<b>' .$vitals_value1 . ':</b> ' . $vitals->{$vitals_key1};
                         }
                     }
-                    if (!empty($vitals_display_arr)) {
+                    if (! empty($vitals_display_arr)) {
                         $vitals_arr['label'] .= '<p>';
                         $vitals_arr['label'] .= implode('; ', $vitals_display_arr);
                         $vitals_arr['label'] .= '</p>';
@@ -3581,9 +3493,7 @@ class ChartController extends Controller {
             $dx_pre_array = [];
             for ($j = 1; $j <= 12; $j++) {
                 $col0 = 'assessment_' . $j;
-                // GYN 20181006: Add ICD code to Assessment display
-                $col1 = 'assessment_icd' . $j;
-                if (!empty($dxs->{$col0})) {
+                if ($dxs->{$col0} !== '' && $dxs->{$col0} !== null) {
                     $dx_pre_array[] = $j;
                 }
             }
@@ -3591,10 +3501,9 @@ class ChartController extends Controller {
                 $first_dx = $dx_pre_array[0];
                 $last_dx = $dx_pre_array[count($dx_pre_array) - 1];
                 foreach ($dx_pre_array as $dx_num) {
+                    $col = 'assessment_' . $dx_num;
                     $arr = [];
-                    $arr['label'] = '<strong>' . $dx_num . ':</strong> ' . $dxs->{'assessment_'.$dx_num};
-                    // GYN 20181006: Add ICD code to assessment display
-                    $arr['label'] .= ' [' . $dxs->{'assessment_icd'.$dx_num} . ']';
+                    $arr['label'] = '<strong>' . $dx_num . ':</strong> ' . $dxs->{$col};
                     $arr['edit'] = route('encounter_assessment_edit', [$dx_num]);
                     $arr['delete'] = route('encounter_assessment_delete', [$dx_num]);
                     if ($dx_num !== $first_dx && $dx_num !== $last_dx) {
@@ -3608,8 +3517,6 @@ class ChartController extends Controller {
                             $arr['move_up'] = route('encounter_assessment_move', [$dx_num, 'up']);
                         }
                     }
-					// GYN 20181007: Add Assessment Copy to Problem List option
-                    $arr['problem_list'] = route('encounter_assessment_copy', [$dx_num]);
                     $dx_array[] = $arr;
                 }
                 $return .= $this->result_build($dx_array, 'assessment_list');
@@ -4146,78 +4053,6 @@ class ChartController extends Controller {
         return redirect(Session::get('last_page'));
     }
 
-    public function encounter_assessment_copy(Request $request, $id)
- 		/**
-		 * Copy Encounter Assessment item to Problem List.
-		 *
-		 * Selected assessment will be added to the problem list via the "issues" table.
-		 * If the issue (assessment) already exists in the table it will be "activated in place", if
-		 * it is not active. "Activated in place" means that its type will not be changed from
-		 * "Medical History" or "Surgical History" to "Problem List", just activated.
-		 *
-		 * @since x.x.x
-		 *
-		 * @link https://www.dropbox.com/s/3g4pc9ggoj1016d/Encounter%20View-%20Edit%20Assessment%20Doesn%27t%20update%20assessment_icd.pdf?dl=0
-		 * @global Lavavel helper Session.
-		 * @global Laravel helper DB.
-		 *
-		 * @param Request $request Ignored.
-		 * @param String $id Assessment ID# (builds column names in "assessment" table).
-		 * @return redirect page
-		 */
-   {
-        $query = DB::table('assessment')->where('eid', '=', Session::get('eid'))->first();
-        $assess_desc_key = 'assessment_' . $id;
-        $assess_icd_key = 'assessment_icd' . $id;
-
-		// Check for existing issue by getting existing issues in table
-		$issue_query = DB::table('issues')->where('pid', '=', $query->{'pid'})->get() ;
-		// If query succeeds with results
-		if (isset($issue_query) && $issue_query->count()) {
-			foreach ($issue_query as $issues_row) {
-				// Check for match
-				// Because 'issue' column is a mashup of text description and ICD code
-				// we need to parse it
-				$issue = explode( '[', $issues_row->issue); // $issue[0] is Text Description
-				$issue_icd =  (isset($issue[1])) ? explode( ']', $issue[1])[0] : '' ;
-				if ($issue_icd == $query->{$assess_icd_key}) {
-					// Found a matching ICD code
-					$message = "Already Active";
-					// Is it active: NULL, '', or "0000-00-00 00:00:00"
-					if ($issues_row->issue_date_inactive != "0000-00-00 00:00:00") {
-						// Yes, then activate it
-						$issue_data = [
-							'issue_date_active' => date("Y-m-d"),
-							'issue_date_inactive' => "0000-00-00 00:00:00",
-							'issue_provider' => Session::get('displayname')
-						];
-						$message = "Activated";
-						DB::table('issues')->where('issue_id', '=', $issues_row->issue_id)->update($issue_data);
-						$this->audit('Update');
-					}
-			        Session::put('message_action', 'Assessment ' . $message . ' in ' . $issues_row->type);
-			        return redirect(Session::get('last_page'));
-				}
-			}
-		}
-		// Assessment not found, so need to add it to 'issues' table
-		$issue_data = [
-			'pid' => $query->{'pid'},
-			'issue' => $query->{$assess_desc_key} . ' [' . $query->{$assess_icd_key} . ']',
-			'issue_date_active' => date("Y-m-d"),
-			'issue_date_inactive' => "0000-00-00 00:00:00",
-			'issue_provider' => Session::get('displayname'),
-			'rcopia_sync' => 'n',
-			'type' => "Problem List",
-			'reconcile' => 'y',
-			'notes' => ''
-		];
-		DB::table('issues')->insert($issue_data);
-		$this->audit('Add');
-        Session::put('message_action', 'Assessment Added to Problem List');
-        return redirect(Session::get('last_page'));
-	}
-
     public function encounter_assessment_delete(Request $request, $id)
     {
         $data = [
@@ -4577,11 +4412,6 @@ class ChartController extends Controller {
             unset($data['_token']);
             $data['encounter_provider'] = $user_query->displayname;
             $data['encounter_DOS'] = date('Y-m-d H:i:s', strtotime($data['encounter_DOS']));
-            if (isset($data['label'])) {
-                $data['label'] = implode(";", $data['label']);
-            } else {
-                $data['label'] = '';
-            }
             $data = array_merge($data, $data_add);
             if ($eid == '0') {
                 $eid = DB::table('encounters')->insertGetId($data);
@@ -4613,22 +4443,6 @@ class ChartController extends Controller {
                 Session::put('message_action', 'Encounter details updated.');
                 return redirect(Session::get('last_page'));
             }
-            if (isset($data['label'])) {
-                if ($data['label'] !== '') {
-                    $label_arr = explode(';', $data['label']);
-                    $name = 'Encounter from Trustee';
-                    $icon = 'https://cloud.noshchartingsystem.com/i-medical-records.png';
-                    $scopes = [
-                        URL::to('/') . '/fhir/Encounter/eid_' . $eid,
-                        'view',
-                        'edit'
-                    ];
-                    foreach ($label_arr as $label) {
-                        $scopes[] = $label;
-                    }
-                    $this->uma_resource($scopes, $name, $icon);
-                }
-            }
         } else {
             if ($eid == '0') {
                 $data['panel_header'] = 'New Encounter';
@@ -4644,11 +4458,9 @@ class ChartController extends Controller {
                     'referring_provider_npi' => null,
                     'encounter_condition_work' => 'No',
                     'encounter_condition_auto' => 'No',
-                    'encounter_condition_auto_country' => $practice->country,
                     'encounter_condition_auto_state' => null,
                     'encounter_condition_other' => 'No',
-                    'encounter_condition' => null,
-                    'label' => null
+                    'encounter_condition' => null
                 ];
                 if (Session::get('group_id') == '2') {
                     $encounter['encounter_provider'] = Session::get('user_id');
@@ -4662,10 +4474,6 @@ class ChartController extends Controller {
                 }
             } else {
                 $result = DB::table('encounters')->where('eid', '=', $eid)->first();
-                $label = [];
-                if ($result->label !== '' || $result->label !== null)  {
-                    $label = explode(";", $result->label);
-                }
                 $encounter = [
                     'encounter_provider' => $result->encounter_provider,
                     'encounter_template' => $result->encounter_template,
@@ -4678,11 +4486,9 @@ class ChartController extends Controller {
                     'referring_provider_npi' => $result->referring_provider_npi,
                     'encounter_condition_work' => $result->encounter_condition_work,
                     'encounter_condition_auto' => $result->encounter_condition_auto,
-                    'encounter_condition_auto_country' => $result->encounter_condition_auto_country,
                     'encounter_condition_auto_state' => $result->encounter_condition_auto_state,
                     'encounter_condition_other' => $result->encounter_condition_other,
-                    'encounter_condition' => $result->encounter_condition,
-                    'label' => $label
+                    'encounter_condition' => $result->encounter_condition
                 ];
                 $data['panel_header'] = 'Encounter Details';
             }
@@ -4711,7 +4517,7 @@ class ChartController extends Controller {
                 'No' => 'No',
                 'Yes' => 'Yes'
             ];
-            $encounter_auto_state_arr = $this->array_states($encounter['encounter_condition_auto_country']);
+            $encounter_auto_state_arr = $this->array_states();
             $items[] = [
                 'name' => 'encounter_provider',
                 'label' => 'Provider',
@@ -4770,15 +4576,6 @@ class ChartController extends Controller {
                 'required' => true,
                 'default_value' => $encounter['encounter_role']
             ];
-            $items[] = [
-                'name' => 'label[]',
-                'label' => 'Sensitive Label',
-                'type' => 'select',
-                'select_items' => $this->fhir_scopes_sensitivities(),
-                'multiple' => true,
-                'selectpicker' => true,
-                'default_value' => $encounter['label']
-            ];
             if ($eid !== '0') {
                 $items[] = [
                     'name' => 'bill_complex',
@@ -4816,20 +4613,11 @@ class ChartController extends Controller {
                     'default_value' => $encounter['encounter_condition_auto']
                 ];
                 $items[] = [
-                    'name' => 'encounter_condition_auto_country',
-                    'label' => 'Country',
-                    'type' => 'select',
-                    'select_items' => $this->array_country(),
-                    'default_value' => $encounter['encounter_condition_auto_country'],
-                    'class' => 'country'
-                ];
-                $items[] = [
                     'name' => 'encounter_condition_auto_state',
                     'label' => 'State Where Motor Vehicle Accident Occurred',
                     'type' => 'select',
                     'select_items' => $encounter_auto_state_arr,
-                    'default_value' => $encounter['encounter_condition_auto_state'],
-                    'class' => 'state'
+                    'default_value' => $encounter['encounter_condition_auto_state']
                 ];
                 $items[] = [
                     'name' => 'encounter_condition_other',
@@ -5590,30 +5378,6 @@ class ChartController extends Controller {
         return view('sigma', $data);
     }
 
-    public function family_history_sensitive(Request $request, $id)
-    {
-        if ($request->isMethod('post')) {
-            $oh = DB::table('other_history')->where('pid', '=', Session::get('pid'))->where('eid', '=', '0')->first();
-            $data = $request->all();
-            if (isset($data['label'])) {
-                $name = 'Family History from Trustee';
-                $icon = 'https://cloud.noshchartingsystem.com/i-family-practice.png';
-                $scopes = [
-                    URL::to('/') . '/fhir/FamilyHistory/',
-                    'view',
-                    'edit'
-                ];
-                foreach ($data['label'] as $label) {
-                    $scopes[] = $label;
-                }
-                $this->uma_resource($scopes, $name, $icon);
-            }
-        } else {
-
-        }
-
-    }
-
     public function family_history_update(Request $request, $id)
     {
         if ($request->isMethod('post')) {
@@ -5853,7 +5617,7 @@ class ChartController extends Controller {
         return view('home', $data);
     }
 
-    public function fhir_connect(Request $request, $id='list', $as='')
+    public function fhir_connect(Request $request, $id='list')
     {
         $data['panel_header'] = 'Connect to a Patient Portal';
         $data['message_action'] = Session::get('message_action');
@@ -5948,9 +5712,6 @@ class ChartController extends Controller {
                 Session::put('fhir_auth_url', $metadata['auth_url']);
                 Session::put('fhir_token_url', $metadata['token_url']);
                 Session::put('fhir_name', $fhir_name);
-                if ($as !== '') {
-                    Session::put('fhir_as', 'true');
-                }
                 $connected1 = DB::table('refresh_tokens')->where('practice_id', '=', '1')->where('endpoint_uri', '=', $fhir_url)->first();
                 if (!$connected1) {
                     $refresh = [
@@ -6021,13 +5782,6 @@ class ChartController extends Controller {
                 Session::put('oidc_relay', $oidc_response['state']);
                 return redirect($oidc_response['url']);
             } else {
-                if (Session::has('fhir_as')) {
-                    Session::forget('fhir_as');
-                    $practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-                    if (!empty($practice->uma_uri)) {
-                        return redirect($practice->uma_uri);
-                    }
-                }
                 Session::put('message_action', $oidc_response['message']);
                 return redirect(Session::get('last_page'));
             }
@@ -6041,17 +5795,9 @@ class ChartController extends Controller {
                 }
                 Session::put('fhir_access_token', $oidc_response1['tokens']['access_token']);
                 Session::put('fhir_patient_token', $oidc_response1['tokens']['patient_token']);
-                Session::forget('fhir_as');
                 // Session::put('fhir_refresh_token', $oidc_response1['tokens']['refresh_token']);
                 return redirect()->route('fhir_connect_display');
             } else {
-                if (Session::has('fhir_as')) {
-                    Session::forget('fhir_as');
-                    $practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-                    if (!empty($practice->uma_uri)) {
-                        return redirect($practice->uma_uri);
-                    }
-                }
                 Session::put('message_action', $oidc_response1['message']);
                 return redirect(Session::get('last_page'));
             }
@@ -8889,7 +8635,18 @@ class ChartController extends Controller {
             } else {
                 $email = $request->input('sms');
                 $message = "You've been invited to use" . $data_message['patient'] . "'s personal health record.  Go to " . $data_message['temp_url'] . " to register";
-                $this->textbelt($request->input('sms'), $message, Session::get('practice_id'));
+                $url = 'http://textbelt.com/text';
+                $message1 = http_build_query([
+                    'number' => $request->input('sms'),
+                    'message' => $message
+                ]);
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $message1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $output = curl_exec ($ch);
+                curl_close ($ch);
             }
             $data = [
                 'email' => $request->input('email'),

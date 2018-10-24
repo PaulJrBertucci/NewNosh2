@@ -60,7 +60,7 @@
                         @if ($pnosh_provider == 'n')
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-3">
-                                    <a class="btn btn-primary btn-block" href="{{ url('/') }}">
+                                    <a class="btn btn-primary btn-block" href="{{ url('/uma_auth') }}">
                                         <i class="fa fa-btn fa-openid"></i> {{ trans('nosh.button_pnosh_login') }}
                                     </a>
                                     <br><br><a href="#" id="show_login_form">{{ trans('nosh.button_pnosh_admin') }}</a><br><br>
@@ -69,7 +69,7 @@
                         @else
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-3">
-									<a class="btn btn-primary btn-block" href="{{ url('/') }}">
+									<a class="btn btn-primary btn-block" href="{{ url('/uma_auth') }}">
                                         <i class="fa fa-btn fa-openid"></i> {{ trans('nosh.button_pnosh_login_with') }} HIE of One
                                     </a>
                                     <a class="btn btn-primary btn-block" href="{{ url('/oidc') }}">
@@ -150,19 +150,19 @@
                                         <i class="fa fa-btn fa-sign-in"></i> {{ trans('nosh.login_heading') }}
                                     </button>
                                     <a class="btn btn-primary btn-block" href="{{ url('/password_email') }}">{{ trans('nosh.forgot_password') }}</a>
-                                    @if ($patient_centric == 'n' && $demo == 'n')
+{{--                                    @if ($patient_centric == 'n' && $demo == 'n')
                                         <a class="btn btn-primary btn-block" href="#" id="register">{{ trans('nosh.new_patient_portal') }}</a>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
 
 							<div class="form-group">
 								<div class="col-md-6 col-md-offset-4">
-									<button type="button" class="btn btn-primary btn-block" id="connectUportBtn" onclick="loginBtnClick()">
+{{--									<button type="button" class="btn btn-primary btn-block" id="connectUportBtn" onclick="loginBtnClick()">
 										<img src="{{ asset('assets/uport-logo-white.svg') }}" height="25" width="25" style="margin-right:5px"></img> {{ trans('nosh.login_uport') }}
 									</button>
 								</div>
-							</div>
+							</div> --}}
                         </form>
                         @if ($errors->has('registration_code') || $errors->has('lastname') || $errors->has('firstname') || $errors->has('dob') || $errors->has('email') || $errors->has('username1') || $errors->has('numberReal'))
                             <form id="register_form" class="form-horizontal" role="form" method="POST" action="{{ url('register_user') }}">
@@ -173,12 +173,12 @@
                             <input type="hidden" name="count" id="new_password_count" value="" />
                             <input type="hidden" name="practice_id" id="register_practice_id" value="" />
 
-                            <div class="well">
+ {{--                           <div class="well">
                                 <p>{{ trans('nosh.instruct_patient_portal1') }}</p>
                                 <p>{{ trans('nosh.instruct_patient_portal2') }}</p>
                                 <p>{{ trans('nosh.instruct_patient_portal3') }}</p>
                                 <p>{{ trans('nosh.instruct_patient_portal4') }}</p>
-                            </div>
+                            </div> --}}
 
                             <div class="form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
                                 <label for="lastname" class="col-md-4 control-label">{{ trans('nosh.lastname') }}</label>

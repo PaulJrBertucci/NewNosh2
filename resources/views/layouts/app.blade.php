@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
     <title>
         @if (isset($title))
             {{ $title }}
         @else
-            NOSH ChartingSystem
+            iTriage
         @endif
     </title>
     {!! Minify::stylesheet($assets_css)->withFullUrl() !!}
@@ -32,7 +32,7 @@
 
                 <!-- Branding Image -->
                 <span class="navbar-brand" id="logo" data-toggle="offcanvas">
-                    GMAST
+                    iTriage
                 </span>
                 @if (Session::has('pid'))
                     <div class="navbar-brand">
@@ -81,7 +81,7 @@
                             <li><a href="{{ route('schedule') }}">{{ trans('nosh.schedule') }}</a></li>
                         @endif
                         @if (Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4')
-/*                            <li><a href="{{ route('financial', ['queue']) }}">{{ trans('nosh.financial') }}</a></li> */
+{{--                            <li><a href="{{ route('financial', ['queue']) }}">{{ trans('nosh.financial') }}</a></li> --}}
                             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ trans('nosh.office') }} <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" style="width:250px;">
                                     <li><a href="{{ route('vaccines', ['inventory']) }}">{{ trans('nosh.vaccines') }}</a></li>
@@ -140,8 +140,8 @@
                             <li><a href="{{ url('/login') }}">{{ trans('nosh.login_heading') }}</a></li>
                         @endif
                     @else
-                        @if (Session::has('uma_uri'))
-                            <li><a href="{{ Session::get('uma_uri') }}/make_invitation"><i class="fa fa-share-square-o fa-fw fa-lg send_uma_invite" data-toggle="tooltip" data-placement="bottom" title="{{ trans('nosh.uma_invite') }}"></i></a></li>
+                        @if (Session::has('pid'))
+                            <li><a href="{{ route('uma_invite') }}"><i class="fa fa-share-square-o fa-fw fa-lg send_uma_invite" data-toggle="tooltip" data-placement="bottom" title="{{ trans('nosh.uma_invite') }}"></i></a></li>
                         @endif
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -282,7 +282,7 @@
                             </a>
                         </li>
                         <li @if(isset($documents_active)) class="active" @endif>
-                            <a href="{{ route('documents_list', ['type' => 'All']) }}">
+                            <a href="{{ route('documents_list', ['type' => 'Laboratory']) }}">
                                 <i class="fa fa-file-text-o fa-fw fa-lg"></i>
                                 <span class="sidebar-item">{{ trans('nosh.documents_list') }}</span>
                             </a>
@@ -342,18 +342,18 @@
                                 <span class="sidebar-item">{{ trans('nosh.records_list') }}</span>
                             </a>
                         </li>
-/*                        <li @if(isset($billing_active)) class="active" @endif>
+{{--                        <li @if(isset($billing_active)) class="active" @endif>
                             <a href="{{ route('billing_list', ['type' => 'encounters', 'pid' => Session::get('pid')]) }}">
                                 <i class="fa fa-bank fa-fw fa-lg"></i>
                                 <span class="sidebar-item">{{ trans('nosh.billing_list') }}</span>
                             </a>
-                        </li>
-                       <li @if(isset($payors_active)) class="active" @endif>
+                        </li> --}}
+{{--                        <li @if(isset($payors_active)) class="active" @endif>
                             <a href="{{ route('payors_list', ['type' => 'active']) }}">
                                 <i class="fa fa-money fa-fw fa-lg"></i>
                                 <span class="sidebar-item">{{ trans('nosh.payors_list') }}</span>
                             </a>
-                        </li> */
+                        </li> --}}
                     @endif
                 </ul>
             </div>
@@ -612,7 +612,6 @@
             'education': '<?php echo url("education"); ?>',
             'event_encounter': '<?php echo url("event_encounter"); ?>',
             'get_appointments': '<?php echo url("get_appointments"); ?>',
-            'get_state_data': '<?php echo url("get_state_data"); ?>',
             'home_url': '<?php echo url("/") . '/'; ?>',
             'image_dimensions': '<?php echo url("image_dimensions"); ?>',
             'last_page': '<?php echo url("last_page"); ?>',
@@ -1662,17 +1661,7 @@
                 } else {
                     if ($(this).hasClass('nosh-icd10')) {
                         if ($(this).hasClass('list-group-item-success') || $(this).hasClass('list-group-item-info')) {
-                            // GYN 20181006: Parse out assessment and icd code
-                            if (target.includes('_')) { // GYN 20181008: Only parse if target textbox contains '_'
-	                            $('#' + target).val(value.split(' [', 1));
-								var target_icd = target.replace("_", "_icd");
-								if ($('#' + target_icd).length != 0) { // GYN 20181008: Only if target_icd exists
-									$('#' + target.replace("_", "_icd")).val($(this).attr('data-nosh-id'));
-								}
-							}
-							else {
-	                            $('#' + target).val(value);
-							}
+                            $('#' + target).val(value);
                         } else {
                             proceed = false;
                             var list_item = $(this).attr('id');
@@ -2293,21 +2282,6 @@
                     window.location = data;
                 }
             });
-        });
-
-        $('.country select').change(function(event){
-            var country = $(this).val();
-            $('.state select').removeOption(/./);
-            $.ajax({
-                type: 'POST',
-                url: noshdata.get_state_data,
-                data: 'country=' + country,
-                dataType: 'json',
-                success: function(data){
-                    $('.state select').addOption(data, false);
-                }
-            });
-
         });
     </script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

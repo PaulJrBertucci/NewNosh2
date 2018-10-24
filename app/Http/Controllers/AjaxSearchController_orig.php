@@ -336,38 +336,37 @@ class AjaxSearchController extends Controller {
                 }
             }
         } else {
-                      $query = DB::table('icd10');
-            $pos = explode(',', $q);
-            if ($pos == FALSE) {
-                $query->where('icd10_description', 'LIKE', "%$q%");
-            } else {
-                foreach ($pos as $p) {
-                    $query->where('icd10_description', 'LIKE', "%$p%");
-                }
-            }
-            $query->orWhere('icd10', 'LIKE', "%$q%");
-            $result = $query->get();
-            if ($result->count()) {
-                $data['message'] = [];
+            $pos = explode(' ', $q);
+            $data['message'] = [];
+            // ICD10data
+            $icd10q = implode('+', $pos);
+            $icd10data = $this->icd10data($icd10q);
+            if (! empty($icd10data)) {
                 $data['response'] = 'li';
                 if ($assessment == true) {
                     $data['response'] = 'div';
                 }
-                foreach ($result as $row) {
-                    $records = $row->icd10_description . ' [' . $row->icd10 . ']';
-                    if ($assessment == true) {
-                        $data['message'][] = [
-                            'id' => $row->icd10,
-                            'label' => $records,
-                            'value' => $records,
-                            'href' => route('encounter_assessment_add', ['icd', $records])
-                        ];
-                    } else {
-                        $data['message'][] = [
-                            'label' => $records,
-                            'value' => $records
-                        ];
-                    }
+            }
+            foreach ($icd10data as $icd10data_r) {
+                if ($assessment == true) {
+                    $data['message'][] = [
+                        'id' => $icd10data_r['code'],
+                        'label' => $icd10data_r['desc'],
+                        'value' => $icd10data_r['desc'],
+                        'href' => route('encounter_assessment_add', ['icd', $icd10data_r['code']]),
+                        'category' => 'ICD10Data',
+                        'category_id' => 'icd10data_result',
+                        'icd10type' => '1',
+                    ];
+                } else {
+                    $data['message'][] = [
+                        'id' => $icd10data_r['code'],
+                        'label' => $icd10data_r['desc'],
+                        'value' => $icd10data_r['desc'],
+                        'category' => 'ICD10Data',
+                        'category_id' => 'icd10data_result',
+                        'icd10type' => '1',
+                    ];
                 }
             }
             // Get common codes

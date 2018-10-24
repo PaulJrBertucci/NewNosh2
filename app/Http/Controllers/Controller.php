@@ -24,7 +24,6 @@ use Htmldom;
 use Laravel\LegacyEncrypter\McryptEncrypter;
 use Mail;
 use PDF;
-use PragmaRX\Countries\Package\Countries;
 use Request;
 use Schema;
 use shihjay2\tcpdi_merger\MyTCPDI;
@@ -1449,13 +1448,6 @@ class Controller extends BaseController
         return $return;
     }
 
-    protected function array_country()
-    {
-        $arr = Countries::all()->pluck('name.common')->toArray();
-        $return = array_combine($arr, $arr);
-        return $return;
-    }
-
     protected function array_duration()
     {
         $return = [
@@ -1627,198 +1619,6 @@ class Controller extends BaseController
         return $return;
     }
 
-    protected function array_locale()
-    {
-        $locale = [
-            // 'ab' => 'Abkhazian',
-            // 'aa' => 'Afar',
-            // 'af' => 'Afrikaans',
-            // 'ak' => 'Akan',
-            // 'sq' => 'Albanian',
-            // 'am' => 'Amharic',
-            // 'ar' => 'Arabic',
-            // 'an' => 'Aragonese',
-            // 'hy' => 'Armenian',
-            // 'as' => 'Assamese',
-            // 'av' => 'Avaric',
-            // 'ae' => 'Avestan',
-            // 'ay' => 'Aymara',
-            // 'az' => 'Azerbaijani',
-            // 'bm' => 'Bambara',
-            // 'ba' => 'Bashkir',
-            // 'eu' => 'Basque',
-            // 'be' => 'Belarusian',
-            // 'bn' => 'Bengali',
-            // 'bh' => 'Bihari languages',
-            // 'bi' => 'Bislama',
-            // 'bs' => 'Bosnian',
-            // 'br' => 'Breton',
-            // 'bg' => 'Bulgarian',
-            // 'my' => 'Burmese',
-            // 'ca' => 'Catalan, Valencian',
-            // 'km' => 'Central Khmer',
-            // 'ch' => 'Chamorro',
-            // 'ce' => 'Chechen',
-            // 'ny' => 'Chichewa, Chewa, Nyanja',
-            // 'zh' => 'Chinese',
-            // 'cu' => 'Church Slavonic, Old Bulgarian, Old Church Slavonic',
-            // 'cv' => 'Chuvash',
-            // 'kw' => 'Cornish',
-            // 'co' => 'Corsican',
-            // 'cr' => 'Cree',
-            // 'hr' => 'Croatian',
-            // 'cs' => 'Czech',
-            // 'da' => 'Danish',
-            // 'dv' => 'Divehi, Dhivehi, Maldivian',
-            // 'nl' => 'Dutch, Flemish',
-            // 'dz' => 'Dzongkha',
-            'en' => 'English',
-            // 'eo' => 'Esperanto',
-            // 'et' => 'Estonian',
-            // 'ee' => 'Ewe',
-            // 'fo' => 'Faroese',
-            // 'fj' => 'Fijian',
-            // 'fi' => 'Finnish',
-            // 'fr' => 'French',
-            // 'ff' => 'Fulah',
-            // 'gd' => 'Gaelic, Scottish Gaelic',
-            // 'gl' => 'Galician',
-            // 'lg' => 'Ganda',
-            // 'ka' => 'Georgian',
-            // 'de' => 'German',
-            // 'ki' => 'Gikuyu, Kikuyu',
-            // 'el' => 'Greek (Modern)',
-            // 'kl' => 'Greenlandic, Kalaallisut',
-            // 'gn' => 'Guarani',
-            // 'gu' => 'Gujarati',
-            // 'ht' => 'Haitian, Haitian Creole',
-            // 'ha' => 'Hausa',
-            // 'he' => 'Hebrew',
-            // 'hz' => 'Herero',
-            // 'hi' => 'Hindi',
-            // 'ho' => 'Hiri Motu',
-            // 'hu' => 'Hungarian',
-            // 'is' => 'Icelandic',
-            // 'io' => 'Ido',
-            // 'ig' => 'Igbo',
-            // 'id' => 'Indonesian',
-            // 'ia' => 'Interlingua (International Auxiliary Language Association)',
-            // 'ie' => 'Interlingue',
-            // 'iu' => 'Inuktitut',
-            // 'ik' => 'Inupiaq',
-            // 'ga' => 'Irish',
-            // 'it' => 'Italian',
-            // 'ja' => 'Japanese',
-            // 'jv' => 'Javanese',
-            // 'kn' => 'Kannada',
-            // 'kr' => 'Kanuri',
-            // 'ks' => 'Kashmiri',
-            // 'kk' => 'Kazakh',
-            // 'rw' => 'Kinyarwanda',
-            // 'kv' => 'Komi',
-            // 'kg' => 'Kongo',
-            // 'ko' => 'Korean',
-            // 'kj' => 'Kwanyama, Kuanyama',
-            // 'ku' => 'Kurdish',
-            // 'ky' => 'Kyrgyz',
-            // 'lo' => 'Lao',
-            // 'la' => 'Latin',
-            // 'lv' => 'Latvian',
-            // 'lb' => 'Letzeburgesch, Luxembourgish',
-            // 'li' => 'Limburgish, Limburgan, Limburger',
-            // 'ln' => 'Lingala',
-            // 'lt' => 'Lithuanian',
-            // 'lu' => 'Luba-Katanga',
-            // 'mk' => 'Macedonian',
-            // 'mg' => 'Malagasy',
-            // 'ms' => 'Malay',
-            // 'ml' => 'Malayalam',
-            // 'mt' => 'Maltese',
-            // 'gv' => 'Manx',
-            // 'mi' => 'Maori',
-            // 'mr' => 'Marathi',
-            // 'mh' => 'Marshallese',
-            // 'ro' => 'Moldovan, Moldavian, Romanian',
-            // 'mn' => 'Mongolian',
-            // 'na' => 'Nauru',
-            // 'nv' => 'Navajo, Navaho',
-            // 'nd' => 'Northern Ndebele',
-            // 'ng' => 'Ndonga',
-            // 'ne' => 'Nepali',
-            // 'se' => 'Northern Sami',
-            // 'no' => 'Norwegian',
-            // 'nb' => 'Norwegian Bokmål',
-            // 'nn' => 'Norwegian Nynorsk',
-            // 'ii' => 'Nuosu, Sichuan Yi',
-            // 'oc' => 'Occitan (post 1500)',
-            // 'oj' => 'Ojibwa',
-            // 'or' => 'Oriya',
-            // 'om' => 'Oromo',
-            // 'os' => 'Ossetian, Ossetic',
-            // 'pi' => 'Pali',
-            // 'pa' => 'Panjabi, Punjabi',
-            // 'ps' => 'Pashto, Pushto',
-            // 'fa' => 'Persian',
-            // 'pl' => 'Polish',
-            // 'pt' => 'Portuguese',
-            // 'qu' => 'Quechua',
-            // 'rm' => 'Romansh',
-            // 'rn' => 'Rundi',
-            // 'ru' => 'Russian',
-            // 'sm' => 'Samoan',
-            // 'sg' => 'Sango',
-            // 'sa' => 'Sanskrit',
-            // 'sc' => 'Sardinian',
-            // 'sr' => 'Serbian',
-            // 'sn' => 'Shona',
-            // 'sd' => 'Sindhi',
-            // 'si' => 'Sinhala, Sinhalese',
-            // 'sk' => 'Slovak',
-            // 'sl' => 'Slovenian',
-            // 'so' => 'Somali',
-            // 'st' => 'Sotho, Southern',
-            // 'nr' => 'South Ndebele',
-            'es' => 'Spanish, Castilian',
-            // 'su' => 'Sundanese',
-            // 'sw' => 'Swahili',
-            // 'ss' => 'Swati',
-            // 'sv' => 'Swedish',
-            // 'tl' => 'Tagalog',
-            // 'ty' => 'Tahitian',
-            // 'tg' => 'Tajik',
-            // 'ta' => 'Tamil',
-            // 'tt' => 'Tatar',
-            // 'te' => 'Telugu',
-            // 'th' => 'Thai',
-            // 'bo' => 'Tibetan',
-            // 'ti' => 'Tigrinya',
-            // 'to' => 'Tonga (Tonga Islands)',
-            // 'ts' => 'Tsonga',
-            // 'tn' => 'Tswana',
-            // 'tr' => 'Turkish',
-            // 'tk' => 'Turkmen',
-            // 'tw' => 'Twi',
-            // 'ug' => 'Uighur, Uyghur',
-            // 'uk' => 'Ukrainian',
-            // 'ur' => 'Urdu',
-            // 'uz' => 'Uzbek',
-            // 've' => 'Venda',
-            // 'vi' => 'Vietnamese',
-            // 'vo' => 'Volap_k',
-            // 'wa' => 'Walloon',
-            // 'cy' => 'Welsh',
-            // 'fy' => 'Western Frisian',
-            // 'wo' => 'Wolof',
-            // 'xh' => 'Xhosa',
-            // 'yi' => 'Yiddish',
-            // 'yo' => 'Yoruba',
-            // 'za' => 'Zhuang, Chuang',
-            // 'zu' => 'Zulu'
-            'phl' => 'Philippines'
-        ];
-        return $locale;
-    }
-
     protected function array_marital()
     {
         $marital = [
@@ -1925,8 +1725,6 @@ class Controller extends BaseController
             foreach ($result as $row) {
                 if ($type == 'Referral') {
                     $return[$row->address_id] = $row->specialty . ': ' . $row->displayname;
-                } elseif ($type == 'Pharmacy') {
-                    $return[''] = 'Select Pharmacy';
                 } else {
                     $return[$row->address_id] = $row->displayname;
                 }
@@ -2289,20 +2087,9 @@ class Controller extends BaseController
         return $return;
     }
 
-    protected function array_states($country='United States')
+    protected function array_states()
     {
         $states = [
-            '' => '',
-        ];
-        $states1 = Countries::where('name.common', $country)
-            ->first()
-            ->hydrateStates()
-            ->states
-            ->sortBy('name')
-            ->pluck('name', 'postal')
-            ->toArray();
-        $states = array_merge($states, $states1);
-        $states_old = [
             '' => '',
             'AL' => 'Alabama',
             'AK' => 'Alaska',
@@ -4123,7 +3910,7 @@ class Controller extends BaseController
             $data['vitals'] .= '<strong>Date/Time:</strong>';
             $data['vitals'] .= $vitalsInfo->vitals_date . '<br>';
             foreach ($vitals_arr as $vitals_k => $vitals_v) {
-                if (!empty($vitalsInfo->{$vitals_k})) {
+                if ($vitalsInfo->{$vitals_k} !== '') {
                     if ($vitals_k !== 'bp_systolic' && $vitals_k !== 'bp_diastolic') {
                         $data['vitals'] .= '<strong>' . $vitals_v['name'] . ': </strong>';
                         if ($vitals_k == 'temp') {
@@ -4131,19 +3918,19 @@ class Controller extends BaseController
                         } else {
                             $data['vitals'] .= $vitalsInfo->{$vitals_k} . ' ' . $vitals_v['unit'] . '<br>';
                         }
-                    } elseif ($vitals_k == 'bp_systolic') {
+                    } else {
                         $data['vitals'] .= '<strong>Blood Pressure: </strong>';
-                        $data['vitals'] .= $vitalsInfo->bp_systolic . '/' . $vitalsInfo->bp_diastolic . ' mmHg, ' . $vitalsInfo->bp_position . '<br>';
+                        $data['vitals'] .= $vitalsInfo->bp_systolic . '/' . $vitalsInfo->bp_diastolic . ', ' . $vitalsInfo->bp_position . '<br>';
                     }
                 }
             }
             foreach ($vitals_arr1 as $vitals_k1 => $vitals_v1) {
-                if (!empty($vitalsInfo->{$vitals_k1})) {
+                if ($vitalsInfo->{$vitals_k1} !== '') {
                     $data['vitals'] .= '<strong>' . $vitals_v1 . ': </strong>';
                     $data['vitals'] .= $vitalsInfo->{$vitals_k1} . '<br>';
                 }
             }
-            if (!empty($vitalsInfo->vitals_other)) {
+            if ($vitalsInfo->vitals_other !== '') {
                 $data['vitals'] .= '<strong>Notes: </strong>';
                 $data['vitals'] .= nl2br($vitalsInfo->vitals_other) . '<br>';
             }
@@ -4214,17 +4001,11 @@ class Controller extends BaseController
             $data['assessment'] = '<br><h4>Assessment:</h4><p class="view">';
             for ($l = 1; $l <= 12; $l++) {
                 $col0 = 'assessment_' . $l;
-				// GYN 20181006: Add ICD code to assessment display
-				$col1 = 'assessment_icd' . $l;
-                if (!empty($assessmentInfo->{$col0})) {
+                if ($assessmentInfo->{$col0} !== '' && $assessmentInfo->{$col0} !== null) {
                     if ($l > 1) {
                         $data['assessment'] .= '<br />';
                     }
-                    $data['assessment'] .= '<strong>' . $assessmentInfo->{$col0};
-					if (!empty($assessmentInfo->{$col1})) {
-						$data['assessment'] .= ' [' . $assessmentInfo->{$col1} . ']';
-					}
-					$data['assessment'] .= '</strong><br />';
+                    $data['assessment'] .= '<strong>' . $assessmentInfo->{$col0} . '</strong><br />';
                 }
             }
             foreach ($assessment_arr as $assessment_k => $assessment_v) {
@@ -4904,48 +4685,6 @@ class Controller extends BaseController
         return $return;
     }
 
-    protected function fhir_scopes_confidentiality()
-    {
-        $arr = [
-            'conf/N' => 'Normal confidentiality',
-            'conf/R' => 'Restricted confidentiality',
-            'conf/V' => 'Very Restricted confidentiality'
-        ];
-        return $arr;
-    }
-
-    protected function fhir_scopes_sensitivities()
-    {
-        $arr = [
-            'sens/ETH' => 'Substance abuse',
-            'sens/PSY' => 'Psychiatry',
-            'sens/GDIS' => 'Genetic disease',
-            'sens/HIV' => 'HIV/AIDS',
-            'sens/SCA' => 'Sickle cell anemia',
-            'sens/SOC' => 'Social services',
-            'sens/SDV' => 'Sexual assault, abuse, or domestic violence',
-            'sens/SEX' => 'Sexuality and reproductive health',
-            'sens/STD' => 'Sexually transmitted disease',
-            'sens/DEMO' => 'All demographic information',
-            'sens/DOB' => 'Date of birth',
-            'sens/GENDER' => 'Gender and sexual orientation',
-            'sens/LIVARG' => 'Living arrangement',
-            'sens/MARST' => 'Marital status',
-            'sens/RACE' => 'Race',
-            'sens/REL' => 'Religion',
-            'sens/B' => 'Business information',
-            'sens/EMPL' => 'Employer',
-            'sens/LOCIS' => 'Location',
-            'sens/SSP' => 'Sensitive service provider',
-            'sens/ADOL' => 'Adolescent',
-            'sens/CEL' => 'Celebrity',
-            'sens/DIAG' => 'Diagnosis',
-            'sens/DRGIS' => 'Drug information',
-            'sens/EMP' => 'Employee'
-        ];
-        return $arr;
-    }
-
     /**
     * Form build
     * @param array  $form_array -
@@ -5153,7 +4892,6 @@ class Controller extends BaseController
             '' => 'Select Electronic Order Interface',
             'PeaceHealth' => 'PeaceHealth Labs'
         ];
-        $practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
         if ($id == '0') {
             $data = [
                 'displayname' => null,
@@ -5164,7 +4902,6 @@ class Controller extends BaseController
                 'facility' => null,
                 'street_address1' => null,
                 'street_address2' => null,
-                'country' => $practice->country,
                 'city' => null,
                 'state' => null,
                 'zip' => null,
@@ -5186,7 +4923,6 @@ class Controller extends BaseController
                 'facility' => $result->facility,
                 'street_address1' => $result->street_address1,
                 'street_address2' => $result->street_address2,
-                'country' => $result->country,
                 'city' => $result->city,
                 'state' => $result->state,
                 'zip' => $result->zip,
@@ -5299,14 +5035,6 @@ class Controller extends BaseController
                 'default_value' => $data['street_address2']
             ];
             $items[] = [
-                'name' => 'country',
-                'label' => 'Country',
-                'type' => 'select',
-                'select_items' => $this->array_country(),
-                'default_value' => $data['country'],
-                'class' => 'country'
-            ];
-            $items[] = [
                 'name' => 'city',
                 'label' => 'City',
                 'type' => 'text',
@@ -5317,9 +5045,8 @@ class Controller extends BaseController
                 'name' => 'state',
                 'label' => 'State',
                 'type' => 'select',
-                'select_items' => $this->array_states($data['country']),
-                'default_value' => $data['state'],
-                'class' => 'state'
+                'select_items' => $this->array_states(),
+                'default_value' => $data['state']
             ];
             $items[] = [
                 'name' => 'zip',
@@ -5482,17 +5209,6 @@ class Controller extends BaseController
             'moderate' => 'Moderate',
             'severe' => 'Severe'
         ];
-        $allergies_provider = null;
-        $provider_id = null;
-        if (Session::get('group_id') == '2') {
-            $allergies_provider = Session::get('displayname');
-            $provider_id = Session::get('user_id');
-        } else {
-            if ($id !== '0') {
-                $allergies_provider = $result->allergies_provider;
-                $provider_id = $result->provider_id;
-            }
-        }
         if ($id == '0') {
             $allergy = [
                 'allergies_med' => null,
@@ -5501,10 +5217,8 @@ class Controller extends BaseController
                 'meds_ndcid' => null,
                 'allergies_date_active' => date('Y-m-d'),
                 'allergies_date_inactive' => '',
-                'allergies_provider' => $allergies_provider,
-                'notes' => null,
-                'label' => null,
-                'provider_id' => $provider_id
+                'allergies_provider' => Session::get('displayname'),
+                'notes' => null
             ];
             if (Session::has('ccda')) {
                 $ccda = Session::get('ccda');
@@ -5518,20 +5232,14 @@ class Controller extends BaseController
                 }
             }
         } else {
-            $label = [];
-            if ($result->label !== '' || $result->label !== null)  {
-                $label = explode(";", $result->label);
-            }
             $allergy = [
                 'allergies_med' => $result->allergies_med,
                 'allergies_reaction' => $result->allergies_reaction,
                 'allergies_severity' => $result->allergies_severity,
                 'meds_ndcid' => $result->meds_ndcid,
                 'allergies_date_active' => date('Y-m-d', $this->human_to_unix($result->allergies_date_active)),
-                'allergies_provider' => $allergies_provider,
-                'notes' => $result->notes,
-                'label' => $label,
-                'provider_id' => $provider_id
+                'allergies_provider' => $result->allergies_provider,
+                'notes' => $result->notes
             ];
             if ($result->allergies_date_inactive == '0000-00-00 00:00:00') {
                 $allergy['allergies_date_inactive'] = '';
@@ -5585,15 +5293,6 @@ class Controller extends BaseController
             'default_value' => $allergy['notes']
         ];
         $items[] = [
-            'name' => 'label[]',
-            'label' => 'Sensitive Label',
-            'type' => 'select',
-            'select_items' => $this->fhir_scopes_sensitivities(),
-            'multiple' => true,
-            'selectpicker' => true,
-            'default_value' => $allergy['label']
-        ];
-        $items[] = [
             'name' => 'allergies_date_inactive',
             'type' => 'hidden',
             'default_value' => $allergy['allergies_date_inactive']
@@ -5603,11 +5302,6 @@ class Controller extends BaseController
             'type' => 'hidden',
             'required' => true,
             'default_value' => $allergy['allergies_provider']
-        ];
-        $items[] = [
-            'name' => 'provider_id',
-            'type' => 'hidden',
-            'default_value' => $allergy['provider_id']
         ];
         return $items;
     }
@@ -5966,7 +5660,6 @@ class Controller extends BaseController
         if ($subtype == 'contacts') {
             $contact_arr = [
                 'address' => $result->address,
-                'country' => $result->country,
                 'city' => $result->city,
                 'state' => $result->state,
                 'zip' => $result->zip,
@@ -5985,14 +5678,6 @@ class Controller extends BaseController
                 'default_value' => $contact_arr['address']
             ];
             $items[] = [
-                'name' => 'country',
-                'label' => 'Country',
-                'type' => 'select',
-                'select_items' => $this->array_country(),
-                'default_value' => $contact_arr['country'],
-                'class' => 'country'
-            ];
-            $items[] = [
                 'name' => 'city',
                 'label' => 'City',
                 'type' => 'text',
@@ -6003,9 +5688,8 @@ class Controller extends BaseController
                 'name' => 'state',
                 'label' => 'State',
                 'type' => 'select',
-                'select_items' => $this->array_states($contact_arr['country']),
-                'default_value' => $contact_arr['state'],
-                'class' => 'state'
+                'select_items' => $this->array_states(),
+                'default_value' => $contact_arr['state']
             ];
             $items[] = [
                 'name' => 'zip',
@@ -6068,7 +5752,6 @@ class Controller extends BaseController
                 'guardian_relationship' => $result->guardian_relationship,
                 'guardian_code' => $result->guardian_code,
                 'guardian_address' => $result->guardian_address,
-                'guardian_country' => $result->guardian_country,
                 'guardian_city' => $result->guardian_city,
                 'guardian_state' => $result->guardian_state,
                 'guardian_zip' => $result->guardian_zip,
@@ -6107,14 +5790,6 @@ class Controller extends BaseController
                 'default_value' => $guardian_arr['guardian_address']
             ];
             $items[] = [
-                'name' => 'guardian_country',
-                'label' => 'Country',
-                'type' => 'select',
-                'select_items' => $this->array_country(),
-                'default_value' => $guardian_arr['guardian_country'],
-                'class' => 'country'
-            ];
-            $items[] = [
                 'name' => 'guardian_city',
                 'label' => 'City',
                 'type' => 'text',
@@ -6125,9 +5800,8 @@ class Controller extends BaseController
                 'name' => 'guardian_state',
                 'label' => 'State',
                 'type' => 'select',
-                'select_items' => $this->array_states($guardian_arr['guardian_country']),
-                'default_value' => $guardian_arr['guardian_state'],
-                'class' => 'state'
+                'select_items' => $this->array_states(),
+                'default_value' => $guardian_arr['guardian_state']
             ];
             $items[] = [
                 'name' => 'guardian_zip',
@@ -6289,20 +5963,14 @@ class Controller extends BaseController
                 'documents_from' => null,
                 'documents_type' => null,
                 'documents_desc' => null,
-                'documents_date' => date('Y-m-d'),
-                'label' => null
+                'documents_date' => date('Y-m-d')
             ];
         } else {
-            $label = [];
-            if ($result->label !== '' || $result->label !== null)  {
-                $label = explode(";", $result->label);
-            }
             $document = [
                 'documents_from' => $result->documents_from,
                 'documents_type' => $result->documents_type,
                 'documents_desc' => $result->documents_desc,
                 'documents_date' => date('Y-m-d', $this->human_to_unix($result->documents_date)),
-                'label' => $label
             ];
         }
         $items[] = [
@@ -6347,15 +6015,6 @@ class Controller extends BaseController
             'type' => 'date',
             'required' => true,
             'default_value' => $document['documents_date']
-        ];
-        $items[] = [
-            'name' => 'label[]',
-            'label' => 'Sensitive Label',
-            'type' => 'select',
-            'select_items' => $this->fhir_scopes_sensitivities(),
-            'multiple' => true,
-            'selectpicker' => true,
-            'default_value' => $document['label']
         ];
         return $items;
     }
@@ -6964,7 +6623,6 @@ class Controller extends BaseController
             'Child' => 'Child',
             'Other' => 'Other'
         ];
-        $practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
         if ($id == '0') {
             $insurance = [
                 'insurance_plan_name' => null,
@@ -6981,7 +6639,6 @@ class Controller extends BaseController
                 'insurance_insu_dob' => null,
                 'insurance_insu_gender' => null,
                 'insurance_insu_address' => null,
-                'insurance_insu_country' => $practice->country,
                 'insurance_insu_city' => null,
                 'insurance_insu_state' => null,
                 'insurance_insu_zip' => null,
@@ -7005,7 +6662,6 @@ class Controller extends BaseController
                 'insurance_insu_dob' => date('Y-m-d', $this->human_to_unix($result->insurance_insu_dob)),
                 'insurance_insu_gender' => $result->insurance_insu_gender,
                 'insurance_insu_address' => $result->insurance_insu_address,
-                'insurance_insu_country' => $result->insurance_insu_country,
                 'insurance_insu_city' => $result->insurance_insu_city,
                 'insurance_insu_state' => $result->insurance_insu_state,
                 'insurance_insu_zip' => $result->insurance_insu_zip,
@@ -7092,14 +6748,6 @@ class Controller extends BaseController
             'default_value' => $insurance['insurance_insu_address']
         ];
         $items[] = [
-            'name' => 'insurance_insu_country',
-            'label' => 'Country',
-            'type' => 'select',
-            'select_items' => $this->array_country(),
-            'default_value' => $insurance['insurance_insu_country'],
-            'class' => 'country'
-        ];
-        $items[] = [
             'name' => 'insurance_insu_city',
             'label' => 'Insured City',
             'type' => 'text',
@@ -7112,9 +6760,8 @@ class Controller extends BaseController
             'label' => 'Insured State',
             'type' => 'select',
             'required' => true,
-            'select_items' => $this->array_states($insurance['insurance_insu_country']),
-            'default_value' => $insurance['insurance_insu_state'],
-            'class' => 'state'
+            'select_items' => $this->array_states(),
+            'default_value' => $insurance['insurance_insu_state']
         ];
         $items[] = [
             'name' => 'insurance_insu_zip',
@@ -7170,8 +6817,7 @@ class Controller extends BaseController
                 'issue_date_active' => date('Y-m-d'),
                 'issue_date_inactive' => '',
                 'issue_provider' => Session::get('displayname'),
-                'notes' => null,
-                'label' => null
+                'notes' => null
             ];
             if (Session::has('ccda')) {
                 $ccda = Session::get('ccda');
@@ -7183,17 +6829,12 @@ class Controller extends BaseController
                 }
             }
         } else {
-            $label = [];
-            if ($result->label !== '' || $result->label !== null)  {
-                $label = explode(";", $result->label);
-            }
             $issue = [
                 'issue' => $result->issue,
                 'type' => $result->type,
                 'issue_date_active' => date('Y-m-d', $this->human_to_unix($result->issue_date_active)),
                 'issue_provider' => $result->issue_provider,
-                'notes' => $result->notes,
-                'label' => $label
+                'notes' => $result->notes
             ];
             if ($result->issue_date_inactive == '0000-00-00 00:00:00') {
                 $issue['issue_date_inactive'] = '';
@@ -7239,15 +6880,6 @@ class Controller extends BaseController
             'type' => 'hidden',
             'required' => true,
             'default_value' => $issue['issue_provider']
-        ];
-        $items[] = [
-            'name' => 'label[]',
-            'label' => 'Sensitive Label',
-            'type' => 'select',
-            'select_items' => $this->fhir_scopes_sensitivities(),
-            'multiple' => true,
-            'selectpicker' => true,
-            'default_value' => $issue['label']
         ];
         return $items;
     }
@@ -7712,7 +7344,6 @@ class Controller extends BaseController
                 'practice_name' => $result->practice_name,
                 'street_address1' => $result->street_address1,
                 'street_address2' => $result->street_address2,
-                'country' => $result->country,
                 'city' => $result->city,
                 'state' => $result->state,
                 'zip' => $result->zip,
@@ -7754,14 +7385,6 @@ class Controller extends BaseController
                 'default_value' => $info_arr['street_address2']
             ];
             $items[] = [
-                'name' => 'country',
-                'label' => 'Country',
-                'type' => 'select',
-                'select_items' => $this->array_country(),
-                'default_value' => $info_arr['country'],
-                'class' => 'country'
-            ];
-            $items[] = [
                 'name' => 'city',
                 'label' => 'City',
                 'type' => 'text',
@@ -7772,10 +7395,9 @@ class Controller extends BaseController
                 'name' => 'state',
                 'label' => 'State',
                 'type' => 'select',
-                'select_items' => $this->array_states($info_arr['country']),
+                'select_items' => $this->array_states(),
                 'required' => true,
-                'default_value' => $info_arr['state'],
-                'class' => 'state'
+                'default_value' => $info_arr['state']
             ];
             $items[] = [
                 'name' => 'zip',
@@ -7972,7 +7594,6 @@ class Controller extends BaseController
             $billing_arr = [
                 'billing_street_address1' => $result->billing_street_address1,
                 'billing_street_address2' => $result->billing_street_address2,
-                'billing_country' => $result->billing_country,
                 'billing_city' => $result->billing_city,
                 'billing_state' => $result->billing_state,
                 'billing_zip' => $result->billing_zip,
@@ -7991,14 +7612,6 @@ class Controller extends BaseController
                 'default_value' => $billing_arr['billing_street_address2']
             ];
             $items[] = [
-                'name' => 'billing_country',
-                'label' => 'Country',
-                'type' => 'select',
-                'select_items' => $this->array_country(),
-                'default_value' => $billing_arr['country'],
-                'class' => 'country'
-            ];
-            $items[] = [
                 'name' => 'billing_city',
                 'label' => 'City',
                 'type' => 'text',
@@ -8009,10 +7622,9 @@ class Controller extends BaseController
                 'name' => 'billing_state',
                 'label' => 'State',
                 'type' => 'select',
-                'select_items' => $this->array_states($billing_arr['country']),
+                'select_items' => $this->array_states(),
                 'required' => true,
-                'default_value' => $billing_arr['billing_state'],
-                'class' => 'state'
+                'default_value' => $billing_arr['billing_state']
             ];
             $items[] = [
                 'name' => 'billing_zip',
@@ -8176,7 +7788,7 @@ class Controller extends BaseController
                 'label' => 'Tuesday close at',
                 'type' => 'text',
                 'time' => true,
-                'default_value' => $schedule['tue_c']
+                'default_value' => $schedule['weekends']
             ];
             $items[] = [
                 'name' => 'wed_o',
@@ -8197,7 +7809,7 @@ class Controller extends BaseController
                 'label' => 'Thursday open at',
                 'type' => 'text',
                 'time' => true,
-                'default_value' => $schedule['thu_o']
+                'default_value' => $schedule['weekends']
             ];
             $items[] = [
                 'name' => 'thu_c',
@@ -8258,7 +7870,6 @@ class Controller extends BaseController
         $provider = [
             'specialty' => $result->specialty,
             'license' => $result->license,
-            'license_country' => $result->license_country,
             'license_state' => $result->license_state,
             'npi' => $result->npi,
             'npi_taxonomy' => $result->npi_taxonomy,
@@ -8283,17 +7894,10 @@ class Controller extends BaseController
             'default_value' => $provider['license']
         ];
         $items[] = [
-            'name' => 'license_country',
-            'label' => 'Country',
-            'type' => 'select',
-            'select_items' => $this->array_country(),
-            'default_value' => $provider['license_country']
-        ];
-        $items[] = [
             'name' => 'license_state',
             'label' => 'State Licensed',
             'type' => 'select',
-            'select_items' => $this->array_states($provider['license_country']),
+            'select_items' => $this->array_states(),
             'default_value' => $provider['license_state']
         ];
         $items[] = [
@@ -8526,8 +8130,7 @@ class Controller extends BaseController
                 'rxl_date_old' => '',
                 'rxl_provider' => $rxl_provider,
                 'id' => $user_id,
-                'rxl_ndcid' => null,
-                'label' => null
+                'rxl_ndcid' => null
             ];
             if ($subtype !== '') {
                 $rx['rxl_quantity'] = null;
@@ -8576,10 +8179,6 @@ class Controller extends BaseController
             if (isset($old_route[$result->rxl_route]) || array_key_exists($result->rxl_route, $old_route)) {
                 $rxl_route = $old_route[$result->rxl_route];
             }
-            $label = [];
-            if ($result->label !== '' || $result->label !== null)  {
-                $label = explode(";", $result->label);
-            }
             $rx = [
                 'rxl_medication' => $result->rxl_medication,
                 'rxl_dosage' => $result->rxl_dosage,
@@ -8592,8 +8191,7 @@ class Controller extends BaseController
                 'rxl_date_active' => date('Y-m-d', strtotime($result->rxl_date_active)),
                 'rxl_provider' => $rxl_provider,
                 'id' => $user_id,
-                'rxl_ndcid' => $result->rxl_ndcid,
-                'label' => $label
+                'rxl_ndcid' => $result->rxl_ndcid
             ];
             if ($result->rxl_date_inactive == '0000-00-00 00:00:00') {
                 $rx['rxl_date_inactive'] = '';
@@ -8701,15 +8299,6 @@ class Controller extends BaseController
             'type' => 'text',
             'readonly' => true,
             'default_value' => $rx['rxl_ndcid']
-        ];
-        $items[] = [
-            'name' => 'label[]',
-            'label' => 'Sensitive Label',
-            'type' => 'select',
-            'select_items' => $this->fhir_scopes_sensitivities(),
-            'multiple' => true,
-            'selectpicker' => true,
-            'default_value' => $rx['label']
         ];
         $items[] = [
             'name' => 'rxl_date_inactive',
@@ -9174,8 +8763,7 @@ class Controller extends BaseController
                 't_messages_to' => null,
                 't_messages_from' => Session::get('displayname') . ' (' . Session::get('user_id') . ')',
                 'pid' => Session::get('pid'),
-                'practice_id' => Session::get('practice_id'),
-                'label' => null
+                'practice_id' => Session::get('practice_id')
             ];
             if (Session::has('session_t_message')) {
                 $new_arr = Session::get('session_t_message');
@@ -9193,10 +8781,6 @@ class Controller extends BaseController
                     $message = $new_arr;
                 }
             }
-            $label = [];
-            if ($result->label !== '' || $result->label !== null)  {
-                $label = explode(";", $result->label);
-            }
             if (count($message) == 0) {
                 $message = [
                     't_messages_subject' => $result->t_messages_subject,
@@ -9207,8 +8791,7 @@ class Controller extends BaseController
                     't_messages_to' => $result->t_messages_to,
                     't_messages_from' => $result->t_messages_from,
                     'pid' => $result->pid,
-                    'practice_id' => $result->practice_id,
-                    'label' => $label
+                    'practice_id' => $result->practice_id
                 ];
             }
         }
@@ -9259,15 +8842,6 @@ class Controller extends BaseController
             'default_value' => $message['t_messages_from']
         ];
         $items[] = [
-            'name' => 'label[]',
-            'label' => 'Sensitive Label',
-            'type' => 'select',
-            'select_items' => $this->fhir_scopes_sensitivities(),
-            'multiple' => true,
-            'selectpicker' => true,
-            'default_value' => $message['label']
-        ];
-        $items[] = [
             'name' => 'pid',
             'type' => 'hidden',
             'default_value' => $message['pid']
@@ -9295,8 +8869,7 @@ class Controller extends BaseController
                 'email' => null,
                 'group_id' => $subtype,
                 'active' => '1',
-                'practice_id' => Session::get('practice_id'),
-                'locale' => null
+                'practice_id' => Session::get('practice_id')
             ];
             if ($subtype == '2') {
                 $data2 = [
@@ -9326,15 +8899,13 @@ class Controller extends BaseController
                 'email' => $result->email,
                 'group_id' => $result->group_id,
                 'active' => $result->active,
-                'practice_id' => $result->practice_id,
-                'locale' => $result->locale
+                'practice_id' => $result->practice_id
             ];
             if ($subtype == '2') {
                 $provider = DB::table('providers')->where('id', '=', $id)->first();
                 $data2 = [
                     'specialty' => $provider->specialty,
                     'license' => $provider->license,
-                    'license_country' => $provider->license_country,
                     'license_state' => $provider->license_state,
                     'npi' => $provider->npi,
                     'npi_taxonomy' => $provider->npi_taxonomy,
@@ -9398,13 +8969,6 @@ class Controller extends BaseController
             'default_value' => $data['email']
         ];
         $items[] = [
-            'name' => 'locale',
-            'label' => 'Locale',
-            'type' => 'select',
-            'select_items' => $this->array_locale(),
-            'default_value' => $data['locale']
-        ];
-        $items[] = [
             'name' => 'group_id',
             'type' => 'hidden',
             'default_value' => $data['group_id']
@@ -9435,20 +8999,11 @@ class Controller extends BaseController
                 'default_value' => $data2['license']
             ];
             $items[] = [
-                'name' => 'license_country',
-                'label' => 'Country',
-                'type' => 'select',
-                'select_items' => $this->array_country(),
-                'default_value' => $data2['license_country'],
-                'class' => 'country'
-            ];
-            $items[] = [
                 'name' => 'license_state',
                 'label' => 'State Licensed',
                 'type' => 'select',
-                'select_items' => $this->array_states($data2['license_country']),
-                'default_value' => $data2['license_state'],
-                'class' => 'state'
+                'select_items' => $this->array_states(),
+                'default_value' => $data2['license_state']
             ];
             $items[] = [
                 'name' => 'npi',
@@ -13739,7 +13294,7 @@ class Controller extends BaseController
         $root_url = explode('/', $pnosh_url);
         $root_url1 = explode('.', $root_url[0]);
         $final_root_url = $root_url1[1] . '.' . $root_url1[2];
-        if ($pnosh_url == 'shihjay.xyz/nosh') {
+        if ($pnosh_url == 'https://shihjay.xyz/nosh') {
             $final_root_url = 'hieofone.org';
         }
         if ($final_root_url == 'hieofone.org') {
@@ -15672,7 +15227,7 @@ class Controller extends BaseController
                     'reference' => 'Encounter/' . $row->eid
                 ];
                 $response['id'] = 'eid_' . $row->eid;
-                $provider = DB::table('users')->where('displayname', '=', $row->encounter_provider)->where('group_id', '=', '2')->first();
+                $provider = DB::table('users')->where('displayname', '=', $row->encounter_provider)->first();
                 $response['dateRecorded'] = date('Y-m-d', $this->human_to_unix($row->assessment_date));
                 $i = 1;
                 while ($i <= 12) {
@@ -15738,7 +15293,7 @@ class Controller extends BaseController
                 'reference' => 'Patient/' . $row->pid,
                 'display' => $patient->firstname . ' ' . $patient->lastname
             ];
-            $provider = DB::table('providers')->where('id', '=', $row->id)->first();
+            $provider = DB::table('users')->where('displayname', '=', $row->rxl_provider)->first();
             if ($provider) {
                 $response['recorder'] = [
                     'reference' => 'Practitioner/' . $provider->id,
@@ -15873,7 +15428,7 @@ class Controller extends BaseController
                 'reference' => 'Patient/' . $row->pid,
                 'display' => $patient->firstname . ' ' . $patient->lastname
             ];
-            $provider = DB::table('users')->where('id', '=', $row->id)->first();
+            $provider = DB::table('users')->where('displayname', '=', $row->rxl_provider)->first();
             if ($provider) {
                 $response['requester']['agent'] = [
                     'reference' => 'Practitioner/' . $provider->id,
@@ -16029,7 +15584,7 @@ class Controller extends BaseController
                 'reference' => 'Patient/' . $row->pid,
                 'display' => $patient->firstname . ' ' . $patient->lastname
             ];
-            $provider = DB::table('users')->where('provider_id', '=', $row->provider_id)->first();
+            $provider = DB::table('users')->where('displayname', '=', $row->allergies_provider)->first();
             if ($provider) {
                 $response['recorder'] = [
                     'reference' => 'Practitioner/' . $provider->id,
@@ -16573,10 +16128,6 @@ class Controller extends BaseController
                 if (isset($item['jump'])) {
                     $return .= '<a href="' . $item['jump'] . '" target="_blank" class="btn fa-btn" data-toggle="tooltip" title="Open Chart"><i class="fa fa-hand-o-right fa-lg"></i></a>';
                 }
-				// GYN 20181007: Add Assessment Copy to Problem List
-				if (isset($item['problem_list'])) {
-                    $return .= '<a href="' . $item['problem_list'] . '" class="btn fa-btn" data-toggle="tooltip" title="Copy to Problem List"><i class="fa fa-share-square fa-lg" style="color:green"></i></a>';
-				}
                 $return .= '</span></li>';
             }
         }
@@ -17606,18 +17157,6 @@ class Controller extends BaseController
                 $date_arr[] = $this->human_to_unix($row6->allergies_date_active);
             }
         }
-        $query7 = DB::table('data_sync')->where('pid', '=', $pid)->get();
-        if ($query7->count()) {
-            foreach ($query7 as $row7) {
-                $description7 = $row7->action . ', ' . $row7->from;
-                $div7 = $this->timeline_item($row7->source_id, $row7->source_index, 'Data Sync via FHIR', $this->human_to_unix($row7->created_at), 'Data Sync via FHIR', $description7);
-                $json[] = [
-                    'div' => $div7,
-                    'startDate' => $this->human_to_unix($row7->created_at)
-                ];
-                $date_arr[] = $this->human_to_unix($row7->created_at);
-            }
-        }
         if (! empty($json)) {
             foreach ($json as $key => $value) {
                 $item[$key]  = $value['startDate'];
@@ -17663,9 +17202,6 @@ class Controller extends BaseController
         }
         if ($category == 'New Allergy') {
             $div .= '<div class="cd-timeline-img cd-allergy"><i class="fa fa-exclamation-triangle fa-fw fa-lg"></i>';
-        }
-        if ($category == 'Data Sync via FHIR') {
-            $div .= '<div class="cd-timeline-img cd-datasync"><i class="fa fa-fire fa-fw fa-lg"></i>';
         }
         $div .= '</div><div class="cd-timeline-content">';
         $div .= '<h3>' . $title . '</h3>';
@@ -18142,114 +17678,6 @@ class Controller extends BaseController
             $oidc1->update_policy($policy_id, $resource_set_id, $permissions);
         }
         return true;
-    }
-
-    protected function uma_resource($scopes, $name='', $icon='', $delete=false)
-    {
-        $practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-        if ($practice->uma_refresh_token !== null && $practice->uma_refresh_token !== '') {
-            $client_id = $practice->uma_client_id;
-            $client_secret = $practice->uma_client_secret;
-            $open_id_url = $query->uma_uri;
-            $oidc = new OpenIDConnectUMAClient($open_id_url, $client_id, $client_secret);
-            $oidc->startSession();
-            $oidc->setSessionName('pnosh');
-            $oidc->setUMA(true);
-            $oidc->refreshToken($practice->uma_refresh_token);
-            $oidc->setUMAType('resource_server');
-            if ($oidc->getRefreshToken() != '') {
-                $refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
-                DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
-                $this->audit('Update');
-            }
-            $resource_set_id = '';
-            foreach ($scope as $scope) {
-                if (filter_var($scope, FILTER_VALIDATE_URL)) {
-                    $resource = DB::table('uma')->where('scope', '=', $scope)->first();
-                    if ($resource) {
-                        $resource_set_id = $resource->resource_set_id;
-                    }
-                }
-            }
-            if ($delete == true && $resource_set_id !== '') {
-                $response = $oidc->delete_resource_set($resource_set_id);
-                DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->delete();
-                $this->audit('Delete');
-            } else {
-                if ($resource_set_id !== '') {
-                    $response = $oidc->update_resource_set($resource_set_id, $name, $icon, $scopes);
-                    DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->delete();
-                    $this->audit('Delete');
-                } else {
-                    $response = $oidc->resource_set($name, $icon, $scopes);
-                }
-                if (isset($response['resource_set_id'])) {
-                    foreach ($scopes as $scope_item) {
-                        $response_data1 = [
-                            'resource_set_id' => $response['resource_set_id'],
-                            'scope' => $scope_item,
-                            'user_access_policy_uri' => $response['user_access_policy_uri']
-                        ];
-                        DB::table('uma')->insert($response_data1);
-                        $this->audit('Add');
-                    }
-                }
-            }
-        }
-    }
-
-    protected function uma_resource_process($pre_label, $row_id1, $table, $delete=false)
-    {
-        $label_arr = explode(';', $pre_label);
-        if ($table == 'allergies') {
-            $name = 'Allergy from Trustee';
-            $icon = 'https://cloud.noshchartingsystem.com/i-allergy.png';
-            $scopes = [
-                URL::to('/') . '/fhir/AllergyIntolerance/' . $row_id1,
-                'view',
-                'edit'
-            ];
-        }
-        if ($table == 'documents') {
-            $name = 'Document from Trustee';
-            $icon = 'https://cloud.noshchartingsystem.com/i-file.png';
-            $scopes = [
-                URL::to('/') . '/fhir/Binary/' . $row_id1,
-                'view',
-                'edit'
-            ];
-        }
-        if ($table == 'issues') {
-            $name = 'Condition from Trustee';
-            $icon = 'https://cloud.noshchartingsystem.com/i-condition.png';
-            $scopes = [
-                URL::to('/') . '/fhir/Condition/issue_id_' . $row_id1,
-                'view',
-                'edit'
-            ];
-        }
-        if ($table == 'rx_list') {
-            $name = 'Medication from Trustee';
-            $icon = 'https://cloud.noshchartingsystem.com/i-pharmacy.png';
-            $scopes = [
-                URL::to('/') . '/fhir/MedicationStatement/' . $row_id1,
-                'view',
-                'edit'
-            ];
-        }
-        if ($table == 't_messages') {
-            $name = 'Encounter from Trustee';
-            $icon = 'https://cloud.noshchartingsystem.com/i-medical-records.png';
-            $scopes = [
-                URL::to('/') . '/fhir/Encounter/t_messages_id_' . $row_id1,
-                'view',
-                'edit'
-            ];
-        }
-        foreach ($label_arr as $label) {
-            $scopes[] = $label;
-        }
-        $this->uma_resource($scopes, $name, $icon, $delete);
     }
 
     protected function update200()

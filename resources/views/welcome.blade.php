@@ -175,7 +175,7 @@
             </div>
         </div>
         @endif
-/*        @if (isset($number_bills))
+ {{--       @if (isset($number_bills))
         <div class="col-lg-3 col-md-3">
             <div class="panel panel-purple nosh-dash">
                 <div class="panel-heading">
@@ -198,7 +198,7 @@
                 </a>
             </div>
         </div>
-        @endif */
+        @endif --}}
         @if (isset($number_tests))
         <div class="col-lg-3 col-md-3">
             <div class="panel panel-purple nosh-dash">
