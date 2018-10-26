@@ -1,0 +1,201 @@
+{
+  "drugGroup": {
+    "name": "Cephalexin",
+    "conceptGroup": [
+      {
+        "tty": "SCD",
+        "conceptProperties": [
+          {
+            "rxcui": "200243",
+            "name": "sevoflurane 1000 MG/ML Inhalant Solution",
+            "synonym": "Sevoflurane",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0694191"
+          },
+          {
+            "rxcui": "1010751",
+            "name": "Epinephrine 0.01 MG/ML / Lidocaine Hydrochloride 10 MG/ML Injectable Solution 20ml",
+            "synonym": "Lidocaine",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0703985"
+          },
+          {
+            "rxcui": "",
+            "name": "Povidone-iodine / Iodopovidone",
+            "synonym": "Povidone iodine",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": ""
+          },
+          {
+            "rxcui": "755976",
+            "name": "Dexamethasone 0.1 MG/ML Oral Solution [Decadron] (100ml prefilled)",
+            "synonym": "Decadron",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0706598"
+          },
+          {
+            "rxcui": "1594589",
+            "name": "Succinylcholine Chloride 20 MG/ML Injectable Solution (100ml prefilled)",
+            "synonym": "Succinylcholine",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0774414"
+          },
+          {
+            "rxcui": "1490057",
+            "name": "Epinephrine 1 MG/ML Injectable Solution [Adrenalin]",
+            "synonym": "Epinephrine",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C3714560"
+          },
+          {
+            "rxcui": "1870207",
+            "name": "NDA019430 0.3 ML Epinephrine 1 MG/ML Auto-Injector",
+            "synonym": "Epi pen",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C3530792"
+          },
+          {
+            "rxcui": "1718902",
+            "name": "20 ML Dexmedetomidine 0.004 MG/ML Injection [Precedex]",
+            "synonym": "Precedex",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C4049109"
+          },
+          {
+            "rxcui": "1812194",
+            "name": "1 ML Dexamethasone phosphate 4 MG/ML Injection",
+            "synonym": "Dexamethasone",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C4282341"
+          },
+          {
+            "rxcui": "197738",
+            "name": "Glycopyrrolate 1 MG Oral Tablet",
+            "synonym": "Glycopyrrolate",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0688977"
+          },
+          {
+            "rxcui": "1666372",
+            "name": "1 ML Phenylephrine Hydrochloride 10 MG/ML Injection",
+            "synonym": "Phenylephrine",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C4048420"
+          },
+          {
+            "rxcui": "1190220",
+            "name": "Albuterol/Salbutamol/Ventolin 0.1 MG/ACTUAT Metered Dose Inhaler",
+            "synonym": "Salbutamol",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C3245066"
+          },
+          {
+            "rxcui": "1665050",
+            "name": "Cefazolin 1000 MG Injection",
+            "synonym": "Cefazolin",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0981367"
+          },
+          {
+            "rxcui": "1000992",
+            "name": "Oxymetazoline hydrochloride 0.5 MG/ML Nasal Spray [Afrin]",
+            "synonym": "Afrin 0.05 % Nasal Spray",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0305180"
+          },
+          {
+            "rxcui": "243675",
+            "name": "Acetaminophen 160 MG/ML Oral Suspension",
+            "synonym": "Acetaminophen",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0783434"
+          },
+          {
+            "rxcui": "94406",
+            "name": "Amoxicillin 440 MG /5 Oral",
+            "synonym": "Amoxicillin",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0307942"
+          },
+          {
+            "rxcui": "313797",
+            "name": "Aoxicillin 125 MG /5 Oral",
+            "synonym": "Amoxicillin",
+            "tty": "SCD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0981209"
+          },
+          {
+            "rxcui": "212306",
+            "name": "Cephalexin 250 MG Oral Capsule",
+            "synonym": "Cephalexin",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": "C0715042"
+          },
+          {
+            "rxcui": "",
+            "name": "Floseal 5 ML",
+            "synonym": "Floseal",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": ""
+          },
+          {
+            "rxcui": "",
+            "name": "Surgicel",
+            "synonym": "Surgicel",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": ""
+          },
+          {
+            "rxcui": "",
+            "name": "Nasopore 1 CM",
+            "synonym": "Nasopore",
+            "tty": "SBD",
+            "language": "ENG",
+            "suppress": "N",
+            "umlscui": ""
+          }
+        ]
+      }
+    ]
+  }
+}
