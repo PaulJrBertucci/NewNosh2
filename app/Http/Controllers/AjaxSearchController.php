@@ -895,11 +895,12 @@ class AjaxSearchController extends Controller {
         $data['response'] = 'false';
         $query = DB::table('demographics')
             ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-            ->select('demographics.lastname', 'demographics.firstname', 'demographics.DOB', 'demographics.pid')
+            ->select('demographics.lastname', 'demographics.firstname', 'demographics.DOB', 'demographics.pid','demographics.nickname')
             ->where('demographics_relate.practice_id', '=', Session::get('practice_id'))
             ->where(function($query_array1) use ($q) {
                 $query_array1->where('demographics.lastname', 'LIKE', "%$q%")
                 ->orWhere('demographics.firstname', 'LIKE', "%$q%")
+                ->orWhere('demographics.nickname', 'LIKE', "%$q%")
                 ->orWhere('demographics.pid', 'LIKE', "%$q%");
             })
             ->get();
@@ -908,7 +909,7 @@ class AjaxSearchController extends Controller {
             $data['response'] = $request->input('type');
             foreach ($query as $row) {
                 $dob = date('m/d/Y', strtotime($row->DOB));
-                $name = $row->lastname . ', ' . $row->firstname . ' (DOB: ' . $dob . ') (ID: ' . $row->pid . ')';
+                $name = $row->lastname . ', ' . $row->firstname . ', ' . $row->nickname . ' (DOB: ' . $dob . ') (ID: ' . $row->pid . ')';
                 $href = route('set_patient', [$row->pid]);
                 if (Session::get('group_id') == '1') {
                     $href = route('print_chart_admin', [$row->pid]);
@@ -956,25 +957,10 @@ class AjaxSearchController extends Controller {
         $q = $request->input('search_rx');
         if (!$q) return;
         $q1 = explode(' ', $q);
-<<<<<<< HEAD
 	$url = 'http://localhost/drugs_nested.json';
 	$array = json_decode(file_get_contents($url), true);
 	$rxnorm = $array;
 	$result = [];
-=======
-        $data['response'] = 'false';
-        $url = 'http://rxnav.nlm.nih.gov/REST/Prescribe/drugs.json?name=' . $q1[0];
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL, $url);
-        curl_setopt($ch,CURLOPT_FAILONERROR,1);
-        curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch,CURLOPT_TIMEOUT, 15);
-        $json = curl_exec($ch);
-        curl_close($ch);
-        $rxnorm = json_decode($json, true);
-        $result = [];
->>>>>>> a7b907d7dd0f0381bf69b4eb937f80be19485063
         $i = 0;
         if (isset($rxnorm['drugGroup']['conceptGroup'])) {
             foreach ($rxnorm['drugGroup']['conceptGroup'] as $rxnorm_row1) {
@@ -982,10 +968,7 @@ class AjaxSearchController extends Controller {
                     if (isset($rxnorm_row1['conceptProperties'])) {
                         foreach($rxnorm_row1['conceptProperties'] as $item) {
                             $result[$i]['rxcui'] = $item['rxcui'];
-<<<<<<< HEAD
                             $result[$i]['synonym'] = $item['synonym'];
-=======
->>>>>>> a7b907d7dd0f0381bf69b4eb937f80be19485063
                             $result[$i]['name'] = $item['name'];
                             if ($rxnorm_row1['tty'] == 'SBD') {
                                 $result[$i]['category'] = 'Brand';
@@ -1002,13 +985,8 @@ class AjaxSearchController extends Controller {
             });
         }
         if (isset($result[0])) {
-<<<<<<< HEAD
             $data_t['message'] = [];
             $data_t['response'] = 'li';
-=======
-            $data['message'] = [];
-            $data['response'] = 'li';
->>>>>>> a7b907d7dd0f0381bf69b4eb937f80be19485063
             foreach ($result as $row) {
                 $arr = explode(' / ', $row['name']);
                 $units = ['MG', 'MG/ML', 'MCG'];
@@ -1025,18 +1003,13 @@ class AjaxSearchController extends Controller {
                         }
                     }
                 }
-<<<<<<< HEAD
                 $data_t['message'][] = [
-=======
-                $data['message'][] = [
->>>>>>> a7b907d7dd0f0381bf69b4eb937f80be19485063
                     'id' => $row['rxcui'],
                     'label' => $row['name'],
                     'value' => $row['name'],
                     'badge' => $row['category'],
                     'dosage' => implode(';', $dosage_arr),
                     'unit' => implode(';', $unit_arr),
-<<<<<<< HEAD
                     'rxcui' => $row['rxcui'],
                     'synonym' => $row['synonym']
                 ];
@@ -1053,12 +1026,6 @@ class AjaxSearchController extends Controller {
  };
  array_remove($data_t['message'], "synonym", $q);
 	$data = $data_t;
-=======
-                    'rxcui' => $row['rxcui']
-                ];
-            }
-        }
->>>>>>> a7b907d7dd0f0381bf69b4eb937f80be19485063
         return $data;
     }
 
