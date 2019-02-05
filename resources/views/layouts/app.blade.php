@@ -10,7 +10,7 @@
         @if (isset($title))
             {{ $title }}
         @else
-            iTriage
+            iTriage EMR
         @endif
     </title>
     {!! Minify::stylesheet($assets_css)->withFullUrl() !!}
@@ -32,7 +32,7 @@
 
                 <!-- Branding Image -->
                 <span class="navbar-brand" id="logo" data-toggle="offcanvas">
-                    iTriage
+                    iTriage EMR
                 </span>
                 @if (Session::has('pid'))
                     <div class="navbar-brand">
