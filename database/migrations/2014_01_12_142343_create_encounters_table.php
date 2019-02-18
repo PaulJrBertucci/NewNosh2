@@ -39,6 +39,7 @@ class CreateEncountersTable extends Migration {
 				$table->string('referring_provider', 255)->nullable();
 				$table->integer('practice_id')->nullable();
 				$table->string('referring_provider_npi', 255)->nullable();
+				$table->string('encounter_bed', 255)->nullable();
 			});
 		}
     }
