@@ -3308,6 +3308,7 @@ class ChartController extends Controller {
         }
         $return .= '">';
         $cc_val = null;
+        $bed_val = null;
         $hpi_val = null;
         $ros_val = null;
         $situation_val = null;
@@ -3315,6 +3316,9 @@ class ChartController extends Controller {
         $ros = DB::table('ros')->where('eid', '=', $eid)->first();
         if ($encounter->encounter_cc !== '') {
             $cc_val = $encounter->encounter_cc;
+        }
+        if ($encounter->encounter_bed !== '') {
+            $bed_val = $encounter->encounter_bed;
         }
         if ($hpi) {
             $hpi_val = $hpi->hpi;
@@ -3353,11 +3357,17 @@ class ChartController extends Controller {
             ];
         } else {
             $s_items[] = [
+                'name' => 'encounter_bed',
+                'label' => 'Bed number',
+                'type' => 'text',
+                'default_value' => $bed_val
+            ];
+            $s_items[] = [
                 'name' => 'hpi',
                 'label' => 'History of Present Illness',
                 'type' => 'textarea',
                 'default_value' => $hpi_val
-            ];
+           ];
             $s_items[] = [
                 'name' => 'ros',
                 'label' => 'Review of Systems',
@@ -4451,6 +4461,7 @@ class ChartController extends Controller {
                     'encounter_template' => $practice->encounter_template,
                     'encounter_DOS' => date('Y-m-d h:i A'),
                     'encounter_location' => $practice->default_pos_id,
+                    'encounter_bed' => null,
                     'encounter_type' => null,
                     'encounter_role' => 'Primary Care Provider',
                     'bill_complex' => null,
@@ -4479,6 +4490,7 @@ class ChartController extends Controller {
                     'encounter_template' => $result->encounter_template,
                     'encounter_DOS' => date('Y-m-d h:i A', $this->human_to_unix($result->encounter_DOS)),
                     'encounter_location' => $result->encounter_location,
+                    'encounter_bed' => $result->encounter_bed,
                     'encounter_type' => $result->encounter_type,
                     'encounter_role' => $result->encounter_role,
                     'bill_complex' => $result->bill_complex,
@@ -4558,6 +4570,13 @@ class ChartController extends Controller {
                 'select_items' => $encounter_location_arr,
                 'required' => true,
                 'default_value' => $encounter['encounter_location']
+            ];
+            $items[] = [
+                'name' => 'encounter_bed',
+                'label' => 'Bed number',
+                'type' => 'text',
+                'required' => true,
+                'default_value' => $encounter['encounter_bed']
             ];
             if ($eid == '0') {
                 $items[] = [
@@ -4943,7 +4962,7 @@ class ChartController extends Controller {
     public function encounter_save(Request $request, $eid, $section)
     {
         $table_arr = [
-            'encounters' => ['encounter_cc'],
+            'encounters' => ['encounter_cc','encounter_bed'],
             'hpi' => ['hpi', 'situation'],
             'ros' => ['ros'],
             'pe' => ['pe'],
