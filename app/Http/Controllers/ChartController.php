@@ -3320,6 +3320,9 @@ class ChartController extends Controller {
         if ($encounter->encounter_bed !== '') {
             $bed_val = $encounter->encounter_bed;
         }
+        if ($encounter->encounter_clawson !== '') {
+            $bed_val = $encounter->encounter_clawson;
+        }
         if ($hpi) {
             $hpi_val = $hpi->hpi;
             $situation_val = $hpi->situation;
@@ -3359,6 +3362,12 @@ class ChartController extends Controller {
             $s_items[] = [
                 'name' => 'encounter_bed',
                 'label' => 'Bed number',
+                'type' => 'text',
+                'default_value' => $bed_val
+            ];
+            $s_items[] = [
+                'name' => 'encounter_clawson',
+                'label' => 'Clawson number',
                 'type' => 'text',
                 'default_value' => $bed_val
             ];
@@ -4462,6 +4471,7 @@ class ChartController extends Controller {
                     'encounter_DOS' => date('Y-m-d h:i A'),
                     'encounter_location' => $practice->default_pos_id,
                     'encounter_bed' => null,
+                    'encounter_clawson' => null,
                     'encounter_type' => null,
                     'encounter_role' => 'Primary Care Provider',
                     'bill_complex' => null,
@@ -4491,6 +4501,7 @@ class ChartController extends Controller {
                     'encounter_DOS' => date('Y-m-d h:i A', $this->human_to_unix($result->encounter_DOS)),
                     'encounter_location' => $result->encounter_location,
                     'encounter_bed' => $result->encounter_bed,
+                    'encounter_clawson' => $result->encounter_clawson,
                     'encounter_type' => $result->encounter_type,
                     'encounter_role' => $result->encounter_role,
                     'bill_complex' => $result->bill_complex,
@@ -4574,6 +4585,13 @@ class ChartController extends Controller {
             $items[] = [
                 'name' => 'encounter_bed',
                 'label' => 'Bed number',
+                'type' => 'text',
+                'required' => true,
+                'default_value' => $encounter['encounter_bed']
+            ];
+            $items[] = [
+                'name' => 'encounter_clawson',
+                'label' => 'Clawson number',
                 'type' => 'text',
                 'required' => true,
                 'default_value' => $encounter['encounter_bed']
@@ -4962,7 +4980,7 @@ class ChartController extends Controller {
     public function encounter_save(Request $request, $eid, $section)
     {
         $table_arr = [
-            'encounters' => ['encounter_cc','encounter_bed'],
+            'encounters' => ['encounter_cc','encounter_bed', 'encounter_clawson'],
             'hpi' => ['hpi', 'situation'],
             'ros' => ['ros'],
             'pe' => ['pe'],
