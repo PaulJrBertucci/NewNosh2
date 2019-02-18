@@ -16309,7 +16309,14 @@ class Controller extends BaseController
             $return['name'] = Session::get('ptname');
             $return['title'] = Session::get('ptname');
             // Demographics
-            $demographics = DB::table('demographics')->where('pid', '=', Session::get('pid'))->first();
+            $demographics = DB::table('demographics')
+		->leftJoin('encounters','demographics.pid','=','encounters.pid')
+		->select('demographics.*','encounters.encounter_date','encounters.encounter_signed','encounters.encounter_bed','encounters.encounter_clawson')
+		->where([
+		['demographics.pid', '=', Session::get('pid')],
+		['encounter_signed', '=', 'No']])
+		->latest('encounter_date')
+		->first();
             if ($demographics->address == '') {
                 $return['demographics_alert'] = 'Address';
             }
@@ -16318,7 +16325,17 @@ class Controller extends BaseController
             }
             $return['demographics_quick'] = '<p style="margin:2px"><strong>DOB: </strong>' . date('F jS, Y', strtotime($demographics->DOB)) . '</p>';
             $return['demographics_quick'] .= '<p style="margin:2px"><strong>Age: </strong>' . Session::get('age') . '</p>';
-            $return['demographics_quick'] .= '<p style="margin-top:2px; margin-bottom:8px;"><strong>Gender: </strong>' . ucfirst(Session::get('gender')) . '</p>';
+            $return['demographics_quick'] .= '<p style="margin:2px"><strong>Gender: </strong>' . ucfirst(Session::get('gender')) . '</p>';
+            $return['demographics_quick'] .= '<p style="margin:2px"><strong>Latest bed number: </strong>' . $demographics->encounter_bed . '</p>';
+            $return['demographics_quick'] .= '<p style="margin-top:2px; margin-bottom:8px;"><strong>Latest Clawson number: </strong>' . $demographics->encounter_clawson . '</p>';
+            // Patient_Ident
+//            $patient_ident = DB::table('encounters')
+//		->where([
+//		['pid', '=', Session::get('pid')],
+//		['encounter_signed', '=', 'No']])
+//		->latest('encounter_date')	
+//		->first();
+//            $return['patient_ident'] .= '<p style="margin-top:2px; margin-bottom:8px;"><strong>Latest bed number: </strong>' . ucfirst(Session::get('encounter_bed')) . '</p>';
             // Conditions
             $conditions = DB::table('issues')->where('pid', '=', Session::get('pid'))->where('issue_date_inactive', '=', '0000-00-00 00:00:00')->orderBy('issue', 'asc')->get();
             $return['conditions_badge'] = '0';
