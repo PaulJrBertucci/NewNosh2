@@ -896,7 +896,7 @@ class AjaxSearchController extends Controller {
         $query = DB::table('demographics')
             ->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
             ->leftJoin('encounters', 'encounters.pid', '=', 'demographics.pid')
-            ->select('demographics.lastname', 'demographics.firstname', 'demographics.DOB', 'demographics.pid','demographics.patient_id','demographics.nickname','encounters.encounter_cc','encounters.encounter_clawson', 'encounters.encounter_date')
+            ->select('demographics.lastname', 'demographics.firstname', 'demographics.DOB', 'demographics.pid','demographics.patient_id','demographics.nickname','encounters.encounter_cc','encounters.encounter_clawson', 'encounters.encounter_date', 'encounters.encounter_bed', 'encounters.encounter_template')
             ->distinct('demographics.pid')
             ->where('demographics_relate.practice_id', '=', Session::get('practice_id'))
             ->where(function($query_array1) use ($q) {
@@ -904,6 +904,7 @@ class AjaxSearchController extends Controller {
                 ->orWhere('demographics.firstname', 'LIKE', "%$q%")
                 ->orWhere('demographics.patient_id', 'LIKE', "%$q%")
                 ->orWhere('encounters.encounter_clawson', 'LIKE', "%$q%")
+                ->orWhere('encounters.encounter_bed', 'LIKE', "%$q%")
                 ->orWhere('demographics.pid', 'LIKE', "%$q%");
             })
             ->get();
@@ -913,7 +914,7 @@ class AjaxSearchController extends Controller {
             foreach ($query as $row) {
                 $dob = date('m/d/Y', strtotime($row->DOB)); 
 		$encounter_date = date('m/d/Y', strtotime($row->encounter_date));
-                $name = $row->lastname . ', ' . $row->firstname . ', ' . $row->encounter_clawson . ', ' . $row->patient_id . ', ' . $row->encounter_cc . ',  (DOB: ' . $dob . ', Encounter date: ' . $encounter_date . ') (ID: ' . $row->pid . ')';
+                $name = $row->lastname . ', ' . $row->firstname . ', ' . $row->encounter_clawson . ', ' . $row->patient_id . ',  DOB ' . $dob . ' (' . ucfirst($row->encounter_template) . ' ['. $row->encounter_cc .']'. ' encounter on ' . $encounter_date . ', Bed number: ' . $row->encounter_bed . 'System ID: ' . $row->pid . ')';
                 $href = route('set_patient', [$row->pid]);
                 if (Session::get('group_id') == '1') {
                     $href = route('print_chart_admin', [$row->pid]);
