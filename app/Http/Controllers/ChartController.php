@@ -3321,7 +3321,7 @@ class ChartController extends Controller {
             $bed_val = $encounter->encounter_bed;
         }
         if ($encounter->encounter_clawson !== '') {
-            $bed_val = $encounter->encounter_clawson;
+            $clawson_val = $encounter->encounter_clawson;
         }
         if ($hpi) {
             $hpi_val = $hpi->hpi;
@@ -3369,7 +3369,7 @@ class ChartController extends Controller {
                 'name' => 'encounter_clawson',
                 'label' => 'Clawson number',
                 'type' => 'text',
-                'default_value' => $bed_val
+                'default_value' => $clawson_val
             ];
             $s_items[] = [
                 'name' => 'hpi',
@@ -4594,7 +4594,7 @@ class ChartController extends Controller {
                 'label' => 'Clawson number',
                 'type' => 'text',
                 'required' => true,
-                'default_value' => $encounter['encounter_bed']
+                'default_value' => $encounter['encounter_clawson']
             ];
             if ($eid == '0') {
                 $items[] = [
