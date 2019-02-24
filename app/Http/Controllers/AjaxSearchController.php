@@ -47,7 +47,7 @@ class AjaxSearchController extends Controller {
         if (Session::has('rx_json')) {
             return Session::get('rx_json');
         } else {
-            $url = 'http://localhost/displaynames.json';
+            $url = '/displaynames.json';
             $ch = curl_init();
             curl_setopt($ch,CURLOPT_URL, $url);
             curl_setopt($ch,CURLOPT_FAILONERROR,1);
@@ -914,7 +914,7 @@ class AjaxSearchController extends Controller {
             foreach ($query as $row) {
                 $dob = date('m/d/Y', strtotime($row->DOB)); 
 		$encounter_date = date('m/d/Y', strtotime($row->encounter_date));
-                $name = $row->lastname . ', ' . $row->firstname . ', ' . $row->encounter_clawson . ', ' . $row->patient_id . ',  DOB ' . $dob . ' (' . ucfirst($row->encounter_template) . ' ['. $row->encounter_cc .']'. ' encounter on ' . $encounter_date . ', Bed number: ' . $row->encounter_bed . 'System ID: ' . $row->pid . ')';
+                $name = $row->lastname . ', ' . $row->firstname . ', ' . $row->encounter_clawson . ', ' . $row->patient_id . ', DOB ' . $dob . ' (' . ucfirst($row->encounter_template) . ' ['. $row->encounter_cc .']'. ' encounter on ' . $encounter_date . ', Bed number: ' . $row->encounter_bed . ', System ID: ' . $row->pid . ')';
                 $href = route('set_patient', [$row->pid]);
                 if (Session::get('group_id') == '1') {
                     $href = route('print_chart_admin', [$row->pid]);
@@ -962,8 +962,8 @@ class AjaxSearchController extends Controller {
         $q = $request->input('search_rx');
         if (!$q) return;
         $q1 = explode(' ', $q);
-	$url = 'http://localhost/drugs_nested.json';
-	$array = json_decode(file_get_contents($url), true);
+	$file = '/noshdocuments/nosh2/resources/drugs_nested.json';
+	$array = json_decode(file_get_contents($file), true);
 	$rxnorm = $array;
 	$result = [];
         $i = 0;
