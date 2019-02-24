@@ -267,7 +267,7 @@ class CoreController extends Controller
         			$message = 'Practice added with mdNOSH integration.';
         			$message .= '  Response from server: ' . $result['status'];
         		}
-    		    //$this->send_mail('emails.apiregister', $data_message, 'NOSH ChartingSystem API Registration', $request->input('email'), '1');
+    		    //$this->send_mail('emails.apiregister', $data_message, 'iTriage EMR API Registration', $request->input('email'), '1');
             } else {
                 $data3['practice_api_url'] = 'nosync';
                 DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data);
@@ -792,8 +792,8 @@ class CoreController extends Controller
                     $data['password'] = $this->gen_secret();
                     $data['created_at'] = date('Y-m-d H:i:s');
                     $url = URL::to('accept_invitation') . '/' . $data['password'];
-                    $email['message_data'] = 'You are invited to use the NOSH ChartingSystem for ' . $practice->practice_name . '.<br>Go to ' . $url . ' to get registered.';
-                    $this->send_mail('auth.emails.generic', $email, 'Invitation to NOSH ChartingSystem', $data['email'], Session::get('practice_id'));
+                    $email['message_data'] = 'You are invited to use iTriage EMR for ' . $practice->practice_name . '.<br>Go to ' . $url . ' to get registered.';
+                    $this->send_mail('auth.emails.generic', $email, 'Invitation to iTriage EMR', $data['email'], Session::get('practice_id'));
                 }
                 $data['displayname'] = $data['firstname'] . " " . $data['lastname'];
                 if ($data['title'] !== ''){
@@ -1688,7 +1688,7 @@ class CoreController extends Controller
 
     public function dashboard(Request $request)
     {
-        $data['title'] = 'NOSH ChartingSystem';
+        $data['title'] = 'iTriage EMR';
         $user_id = Session::get('user_id');
         if (Session::get('group_id') == '100') {
             $row = DB::table('demographics_relate')->where('id', '=', $user_id)->first();
@@ -5367,7 +5367,7 @@ class CoreController extends Controller
         $data2['message_data'] = 'This message is to notify you that you have reset your password with mdNOSH Gateway.<br>';
         $data2['message_data'] .= 'To finish this process, please click on the following link or point your web browser to:<br>';
         $data2['message_data'] .= $url;
-        $this->send_mail('auth.emails.generic', $data2, 'Reset password to NOSH ChartingSystem', $query->email, $query->practice_id);
+        $this->send_mail('auth.emails.generic', $data2, 'Reset password to iTriage EMR', $query->email, $query->practice_id);
         Session::put('message_action', 'Password reset.  Check your email for further instructions');
         return redirect(Session::get('last_page'));
     }
@@ -5911,7 +5911,7 @@ class CoreController extends Controller
             Session::put('provider_id', $provider_id);
         }
         // Just show provider selector
-        $data['title'] = 'NOSH ChartingSystem';
+        $data['title'] = 'iTriage EMR';
         if (Session::has('pid')) {
             $data = array_merge($data, $this->sidebar_build('chart'));
         }
