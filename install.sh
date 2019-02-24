@@ -256,7 +256,7 @@ if [ -e "$WEB_CONF"/nosh2.conf ]; then
 	rm "$WEB_CONF"/nosh2.conf
 fi
 touch "$WEB_CONF"/nosh2.conf
-APACHE_CONF="Alias /nosh $NEWNOSH/public
+APACHE_CONF="Alias /itriage $NEWNOSH/public
 <Directory $NEWNOSH/public>
 	Options Indexes FollowSymLinks MultiViews
 	AllowOverride None"
@@ -292,6 +292,6 @@ log_only "NOSH ChartingSystem Apache configuration file set."
 log_only "Restarting Apache service."
 $APACHE >> $LOG 2>&1
 # Installation completed
-log_only "You can now complete your new installation of NOSH ChartingSystem by browsing to:"
-log_only "https://localhost/nosh"
+log_only "You can now complete your new installation of iTriage EMR by browsing to:"
+log_only "https://localhost/itriage"
 exit 0
