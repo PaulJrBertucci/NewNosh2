@@ -72,8 +72,7 @@
                 {type: 'line', data: [], name: noshdata.graph_series_name}
             ],
             credits: {
-                href: 'http://noshemr.wordpress.com',
-                text: 'NOSH ChartingSystem'
+                text: 'iTriage EMR'
             }
         };
     }
@@ -130,8 +129,7 @@
                 {type: 'line', data: []}
             ],
             credits: {
-                href: 'http://noshemr.wordpress.com',
-                text: 'NOSH ChartingSystem'
+                text: 'iTriage EMR'
             },
             plotOptions: {
                 spline: {
