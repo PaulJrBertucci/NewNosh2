@@ -16313,11 +16313,9 @@ class Controller extends BaseController
             $return['title'] = Session::get('ptname');
             // Demographics
             $demographics = DB::table('demographics')
-		->leftJoin('encounters','demographics.pid','=','encounters.pid')
+		->LeftJoin('encounters','demographics.pid','=','encounters.pid')
 		->select('demographics.*','encounters.encounter_date','encounters.encounter_signed','encounters.encounter_bed','encounters.encounter_clawson')
-		->where([
-		['demographics.pid', '=', Session::get('pid')],
-		['encounter_signed', '=', 'No']])
+		->where('demographics.pid', '=', Session::get('pid'))
 		->latest('encounter_date')
 		->first();
             if ($demographics->address == '') {
