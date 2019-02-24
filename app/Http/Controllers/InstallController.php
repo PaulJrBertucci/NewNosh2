@@ -376,7 +376,7 @@ class InstallController extends Controller {
             if (array_key_exists('pnosh_email', $_COOKIE)) {
                 $email = $_COOKIE['pnosh_email'];
             }
-            $data['panel_header'] = 'NOSH ChartingSystem Installation';
+            $data['panel_header'] = 'iTriage EMR Installation';
             $items[] = [
                 'name' => 'username',
                 'label' => 'Administrator Username',
@@ -528,7 +528,7 @@ class InstallController extends Controller {
                 'items' => $items,
                 'save_button_label' => 'Install'
             ];
-            $data['content'] = '<p>Please fill out the entries to complete the installation of NOSH ChartingSystem.</p><p>You will need to establish a Google Gmail account to be able to send e-mail from the system for patient appointment reminders, non-Protected Health Information messages, and faxes.</p>';
+            $data['content'] = '<p>Please fill out the entries to complete the installation of iTriage EMR.</p><p>You will need to establish a Google Gmail account to be able to send e-mail from the system for patient appointment reminders, non-Protected Health Information messages, and faxes.</p>';
             $data['content'] .= $this->form_build($form_array);
             $data['assets_js'] = $this->assets_js();
             $data['assets_css'] = $this->assets_css();
@@ -1289,7 +1289,7 @@ class InstallController extends Controller {
                 'items' => $items,
                 'save_button_label' => 'Submit'
             ];
-            $data['content'] = '<p>An Authorization Server has not been found in the same domain as your NOSH ChartingSystem installation.</p><p>You will need to designate the URL of your Authorization Server to proceed with using NOSH ChartingSystem</p>';
+            $data['content'] = '<p>An Authorization Server has not been found in the same domain as your iTriage EMR installation.</p><p>You will need to designate the URL of your Authorization Server to proceed with using iTriage EMR</p>';
             $data['content'] .= $this->form_build($form_array);
             $data['assets_js'] = $this->assets_js();
             $data['assets_css'] = $this->assets_css();
