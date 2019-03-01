@@ -230,14 +230,14 @@ function printView() {
   } else {
     x.style.display = "none";
   }
-  var y = document.getElementById("sidebar");
-	if (y.style.display === "none") {
+  var y =  document.getElementById("month");
+  if (y.style.display === "none") {
     y.style.display = "block";
   } else {
     y.style.display = "none";
   }
-  var z =  document.getElementById("month");
-  if (z.style.display === "none") {
+  var z = document.getElementById("sidebar");
+	if (z.style.display === "none") {
     z.style.display = "block";
   } else {
     z.style.display = "none";
