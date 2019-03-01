@@ -7,7 +7,7 @@
     <div class="container">
 @endif
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4" id = "month">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h4 class="panel-title">Schedule</h4>
@@ -38,8 +38,11 @@
         @if (isset($provider_id))
             <div class="col-md-8">
             <!-- FullCalendar -->
+<input type="button" onclick="printView('view')" value="Printable calendar view" />
                 <div id="calendar"></div>
+
             </div>
+
         @endif
     </div>
 </div>
@@ -215,6 +218,33 @@
         }
         return false;
     }
+
+ 
+
+
+function printView() {
+
+  var x =  document.getElementById("search_patient_form");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  var y = document.getElementById("sidebar");
+	if (y.style.display === "none") {
+    y.style.display = "block";
+  } else {
+    y.style.display = "none";
+  }
+  var z =  document.getElementById("month");
+  if (z.style.display === "none") {
+    z.style.display = "block";
+  } else {
+    z.style.display = "none";
+  }
+} 
+
+
     $(function () {
         $('#datetimepicker').datetimepicker({
             inline: true,
@@ -286,7 +316,7 @@
                     $('#timestamp_span').text(calEvent.timestamp);
                     $('#start_date').val(calEvent.start.format('YYYY-MM-DD'));
                     $('#start_time').val(calEvent.start.format('hh:mmA'));
-                    $('#end').val(calEvent.end.format('hh:mmA'));
+                    $('#end_time').val(calEvent.end.format('hh:mmA'));
                     $('#title').val(calEvent.title);
                     $('#visit_type').val(calEvent.visit_type);
                     if (calEvent.visit_type){
@@ -295,8 +325,8 @@
                         $('#event_encounter').show();
                         $('#eventModal_title').text('{{ trans('nosh.edit_appointment') }}');
                         $('#patient_name').text(calEvent.title);
-                        $('#end').val('');
-                        $('#end').prop('required', false);
+                        $('#end_time').val('');
+                        $('#end_time').prop('required', false);
                         $('#visit_type').prop('required', true);
                         $('#visit_type').focus();
                     } else {
@@ -304,7 +334,7 @@
                         $('.nosh-event').show();
                         $('#event_encounter').hide();
                         $('#eventModal_title').text('Edit Event');
-                        $('#end').prop('required', true);
+                        $('#end_time').prop('required', true);
                         $('#visit_type').prop('required', false);
                         $('#reason').focus();
                     }
@@ -420,7 +450,7 @@
             $('#eventModal_title').text('{{ trans('nosh.new_appointment') }}');
             $('#event_delete').hide();
             $('#eventModal').modal('show');
-            $('#end').prop('required', false);
+            $('#end_time').prop('required', false);
             $('#visit_type').prop('required', true);
             $('#visit_type').focus();
         });
@@ -431,7 +461,7 @@
             $('#event_encounter').hide();
             $('#eventModal_title').text('New Event');
             $('#eventModal').modal('show');
-            $('#end').prop('required', true);
+            $('#end_time').prop('required', true);
             $('#visit_type').prop('required', false);
             $('#reason').focus();
         });
