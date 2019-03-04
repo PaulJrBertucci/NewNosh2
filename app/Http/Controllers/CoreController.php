@@ -5896,8 +5896,19 @@ class CoreController extends Controller
             $data['timezone'] = $practice->timezone;
             if (Session::has('pid')) {
                 $data['pid'] = Session::get('pid');
-                $patient_query = DB::table('demographics')->where('pid', '=', Session::get('pid'))->first();
-                $data['pt_name'] = $patient_query->lastname . ', ' . $patient_query->firstname . ' (DOB: ' . date('m/d/Y', strtotime($patient_query->DOB)) . ') (ID: ' . $patient_query->pid . ')';
+                $patient_query = DB::table('demographics')
+		->select('demographics.*')
+		->where('pid', '=', Session::get('pid'))->first();
+		$patient_quickref_query = DB::table('demographics')
+		->Join('demographics_relate','demographics.pid','=','demographics_relate.pid')
+		->Join('practiceinfo','practiceinfo.practice_id','=','demographics_relate.practice_id')
+		->LeftJoin('encounters','demographics.pid','=','encounters.pid')
+		->LeftJoin('vitals','encounters.eid','=','vitals.eid')
+		->select('demographics.*','encounters.encounter_date','encounters.encounter_signed','encounters.encounter_bed','encounters.encounter_clawson','vitals.weight','practiceinfo.weight_unit','practiceinfo.height_unit','practiceinfo.temp_unit','practiceinfo.hc_unit')
+		->where('demographics.pid', '=', Session::get('pid'))
+		->latest('encounter_date')
+		->first();
+                $data['pt_name'] = $patient_query->lastname . ', ' . $patient_query->firstname . ' (DOB: ' . date('m/d/Y', strtotime($patient_query->DOB)) .  ') (System ID: ' . $patient_query->pid . ' Patient/Hospital ID: ' . $patient_query->patient_id . ' Latest Clawson number: ' . $patient_quickref_query->encounter_clawson . ' Latest bed number: ' . $patient_quickref_query->encounter_bed . ' Latest weight: ' . $patient_quickref_query->weight . $patient_quickref_query->weight_unit . ')';
             }
             $query = DB::table('calendar')
                 ->where('active', '=', 'y')
