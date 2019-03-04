@@ -5573,7 +5573,7 @@ class Controller extends BaseController
             ];
             $items[] = [
                 'name' => 'patient_id',
-                'label' => 'Patient ID',
+                'label' => 'Patient/Hospital ID',
                 'type' => 'text',
                 'default_value' => $identity_arr['patient_id']
             ];
@@ -16327,6 +16327,7 @@ class Controller extends BaseController
             $return['demographics_quick'] = '<p style="margin:2px"><strong>DOB: </strong>' . date('F jS, Y', strtotime($demographics->DOB)) . '</p>';
             $return['demographics_quick'] .= '<p style="margin:2px"><strong>Age: </strong>' . Session::get('age') . '</p>';
             $return['demographics_quick'] .= '<p style="margin:2px"><strong>Gender: </strong>' . ucfirst(Session::get('gender')) . '</p>';
+            $return['demographics_quick'] .= '<p style="margin:2px"><strong>Patient/Hospital ID: </strong>' . $demographics->patient_id . '</p>'; 
             $return['demographics_quick'] .= '<p style="margin:2px"><strong>Latest bed number: </strong>' . $demographics->encounter_bed . '</p>';
             $return['demographics_quick'] .= '<p style="margin-top:2px; margin-bottom:8px;"><strong>Latest Clawson number: </strong>' . $demographics->encounter_clawson . '</p>';
             // Conditions
