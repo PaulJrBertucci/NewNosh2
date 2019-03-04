@@ -5879,6 +5879,7 @@ class CoreController extends Controller
             }
         }
         $provider_arr = $this->array_providers();
+	$today = date("Y-m-d");
         $data['provider_list'] = '<option value="">Select a provider</option>';
         foreach ($provider_arr as $provider_id_key => $provider_name) {
             $data['provider_list'] .= '<option value="' . $provider_id_key . '">' . $provider_name . '</option>';
@@ -5908,7 +5909,7 @@ class CoreController extends Controller
 		->where('demographics.pid', '=', Session::get('pid'))
 		->latest('encounter_date')
 		->first();
-                $data['pt_name'] = $patient_query->lastname . ', ' . $patient_query->firstname . ' (DOB: ' . date('m/d/Y', strtotime($patient_query->DOB)) .  ') (System ID: ' . $patient_query->pid . ' Patient/Hospital ID: ' . $patient_query->patient_id . ' Latest Clawson number: ' . $patient_quickref_query->encounter_clawson . ' Latest bed number: ' . $patient_quickref_query->encounter_bed . ' Latest weight: ' . $patient_quickref_query->weight . $patient_quickref_query->weight_unit . ')';
+                $data['pt_name'] = $patient_query->lastname . ', ' . $patient_query->firstname . ' (DOB: ' . date('m/d/Y', strtotime($patient_query->DOB)) . ', Age: ' . date_diff(date_create($patient_query->DOB), date_create($today))->format('%y years, %m months') . ') (System ID: ' . $patient_query->pid . ', Patient/Hospital ID: ' . $patient_query->patient_id . ', Latest Clawson number: ' . $patient_quickref_query->encounter_clawson . ', Latest bed number: ' . $patient_quickref_query->encounter_bed . ', Latest weight: ' . $patient_quickref_query->weight . $patient_quickref_query->weight_unit . ')';
             }
             $query = DB::table('calendar')
                 ->where('active', '=', 'y')
