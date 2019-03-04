@@ -16311,6 +16311,7 @@ class Controller extends BaseController
         if ($type == 'chart') {
             $return['name'] = Session::get('ptname');
             $return['title'] = Session::get('ptname');
+            $today = date("Y-m-d");
             // Demographics
             $demographics = DB::table('demographics')
 		->LeftJoin('encounters','demographics.pid','=','encounters.pid')
@@ -16325,7 +16326,7 @@ class Controller extends BaseController
                 $return['name'] .= ' (' . $demographics->nickname . ')';
             }
             $return['demographics_quick'] = '<p style="margin:2px"><strong>DOB: </strong>' . date('F jS, Y', strtotime($demographics->DOB)) . '</p>';
-            $return['demographics_quick'] .= '<p style="margin:2px"><strong>Age: </strong>' . Session::get('age') . '</p>';
+            $return['demographics_quick'] .= '<p style="margin:2px"><strong>Age: </strong>' . date_diff(date_create($demographics->DOB), date_create($today))->format('%y years, %m months') . '</p>';
             $return['demographics_quick'] .= '<p style="margin:2px"><strong>Gender: </strong>' . ucfirst(Session::get('gender')) . '</p>';
             $return['demographics_quick'] .= '<p style="margin:2px"><strong>Patient/Hospital ID: </strong>' . $demographics->patient_id . '</p>'; 
             $return['demographics_quick'] .= '<p style="margin:2px"><strong>Latest bed number: </strong>' . $demographics->encounter_bed . '</p>';
