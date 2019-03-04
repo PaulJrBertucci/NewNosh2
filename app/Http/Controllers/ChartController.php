@@ -3258,9 +3258,12 @@ class ChartController extends Controller {
             'medical',
             'virtual',
             'standardmedical',
+            'admission',
+            'rounds',
             'standardmedical1',
             'standardpsych',
             'standardpsych1',
+            'discharge'
         ];
         $psych_array = [
             'standardpsych',
@@ -3317,10 +3320,10 @@ class ChartController extends Controller {
         if ($encounter->encounter_cc !== '') {
             $cc_val = $encounter->encounter_cc;
         }
-        if ($encounter->encounter_bed !== '') {
+        if ($encounter->encounter_bed !== null) {
             $bed_val = $encounter->encounter_bed;
         }
-        if ($encounter->encounter_clawson !== '') {
+        if ($encounter->encounter_clawson !== null) {
             $clawson_val = $encounter->encounter_clawson;
         }
         if ($hpi) {
@@ -3345,7 +3348,7 @@ class ChartController extends Controller {
         }
         $s_items[] = [
             'name' => 'encounter_cc',
-            'label' => 'Chief Complaint',
+            'label' => 'Chief Complaint/Reason',
             'type' => 'text',
             'required' => true,
             'typeahead' => route('typeahead', ['table' => 'encounters', 'column' => 'encounter_cc']),
@@ -3848,7 +3851,7 @@ class ChartController extends Controller {
         $data1['addendum'] = 'y';
         DB::table('encounters')->where('eid', '=', $eid)->update($data1);
         $this->audit('Update');
-        if ($encounter->encounter_template == 'standardmedical' || $encounter->encounter_template == 'standardmedical1' || $encounter->encounter_template == 'medical') {
+        if ($encounter->encounter_template == 'standardmedical' || $encounter->encounter_template == 'standardmedical1' || $encounter->encounter_template == 'admission' || $encounter->encounter_template == 'rounds' || $encounter->encounter_template == 'discharge' || $encounter->encounter_template == 'medical') {
             $table_array1 = ["hpi", "ros", "vitals", "pe", "labs", "procedure", "rx", "assessment", "plan"];
             $table_array2 = ["other_history", "orders", "billing", "billing_core", "image"];
         }
@@ -4552,7 +4555,7 @@ class ChartController extends Controller {
             if ($eid == '0') {
                 $items[] = [
                     'name' => 'encounter_cc',
-                    'label' => 'Chief Complaint',
+                    'label' => 'Chief Complaint/Reason',
                     'type' => 'text',
                     'typeahead' => route('typeahead', ['table' => 'encounters', 'column' => 'encounter_cc']),
                     'default_value' => null
@@ -4586,14 +4589,14 @@ class ChartController extends Controller {
                 'name' => 'encounter_bed',
                 'label' => 'Bed number',
                 'type' => 'text',
-                'required' => true,
+                'required' => false,
                 'default_value' => $encounter['encounter_bed']
             ];
             $items[] = [
                 'name' => 'encounter_clawson',
                 'label' => 'Clawson number',
                 'type' => 'text',
-                'required' => true,
+                'required' => false,
                 'default_value' => $encounter['encounter_clawson']
             ];
             if ($eid == '0') {
