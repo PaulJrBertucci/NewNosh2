@@ -44,6 +44,7 @@ class CoreController extends Controller
             $data = [
                 'lastname' => $request->input('lastname'),
                 'firstname' => $request->input('firstname'),
+                'patient_id' => $request->input('patient_id'),
                 'DOB' => date('Y-m-d', strtotime($request->input('DOB'))),
                 'sex' => $request->input('sex'),
                 'active' => '1',
@@ -96,6 +97,13 @@ class CoreController extends Controller
                 'default_value' => null
             ];
             $items[] = [
+                'name' => 'patient_id',
+                'label' => 'Patient/Hospital ID',
+                'type' => 'text',
+                'required' => false,
+                'default_value' => null
+            ];
+            $items[] = [
                 'name' => 'sex',
                 'label' => 'Gender',
                 'type' => 'select',
@@ -118,7 +126,7 @@ class CoreController extends Controller
             return view('core', $data);
         }
     }
-
+	
     public function addressbook(Request $request, $type)
     {
         $data['message_action'] = Session::get('message_action');
