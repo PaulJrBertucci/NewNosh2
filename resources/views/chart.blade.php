@@ -787,7 +787,7 @@
                 } else {
                     $('#temp').css('color','black');
                 }
-                if (a > 106 || a < 93) {
+                if (a > 106 || a < 33) {
                     toastr.error('{{ trans('nosh.invalid_temp') }}');
                     $('#temp').val('');
                     $('#temp').css('color','black');
