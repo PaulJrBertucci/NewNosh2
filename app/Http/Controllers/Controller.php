@@ -8992,6 +8992,7 @@ class Controller extends BaseController
             $items[] = [
                 'name' => 'specialty',
                 'label' => 'Specialty',
+                'required' => true,
                 'type' => 'text',
                 'default_value' => $data2['specialty']
             ];
